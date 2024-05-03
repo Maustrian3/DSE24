@@ -1,5 +1,9 @@
 # DSE24
 
+<p align="center">
+  <img width="400" src="./assets/logo.png">
+</p>
+
 ## Sequence charts
 
 ### Establish/Break link
