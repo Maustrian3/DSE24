@@ -218,6 +218,17 @@ The JSON body of a vehicle update message event is the same as the entries of th
 
 ## Message Channels
 
+```mermaid
+stateDiagram-v2
+    Vehicle --> Beachcomb: Status updates
+    Beachcomb --> Control: Vehicle status
+    Beachcomb --> Control: Close vehicles
+    Beachcomb --> Dashboard: Vehicle status
+    Control --> Beachcomb: Available vehicles
+    Control --> Dashboard: Log message
+    Control --> Vehicle: Control message
+```
+
 ### Vehicle status updates
 Vehicles send their current status to this channel. The beachcomb service consumes these
 messages, verifies/validates them, and processes them.
@@ -248,8 +259,8 @@ The JSON body of a status update of a vehicle:
   - For a following (not autonomous) vehicle a boolean is set to `true`.
 
 ### Vehicle control message
-In follow-me mode both participants (leading and following) get send control messages to their respective
-direct exchange channel.
+In follow-me mode both participants (leading and following) get sent control messages to their respective
+direct exchange channel by the control service.
 
 The JSON body of a control message to a leading vehicle:
 ```json
