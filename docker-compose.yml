@@ -1,0 +1,18 @@
+version: '1'
+name: dse24
+networks:
+    static-network:
+        ipam:
+            config:
+                - subnet: 172.20.0.0/16
+services:
+    inventory:
+        image: dse24-inventory-service
+        build:
+            context: ./
+            dockerfile: ./src/inventory_service/Dockerfile
+        networks:
+            static-network:
+                ipv4_address: 172.20.0.10
+        ports:
+            - 8080:80

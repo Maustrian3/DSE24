@@ -1,0 +1,19 @@
+{
+  "name": "inventory_service",
+  "version": "1.0.0",
+  "description": "DSE24 Inventory Service",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "ShadowDrive Systems (R)",
+  "license": "MIT",
+  "dependencies": {
+    "@google-cloud/cloud-sql-connector": "^1.3.0",
+    "amqplib": "^0.10.4",
+    "dotenv": "^16.4.5",
+    "express": "^4.19.2",
+    "mysql2": "^3.9.7"
+  }
+}
