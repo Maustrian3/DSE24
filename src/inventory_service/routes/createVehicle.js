@@ -1,6 +1,6 @@
 
 import joi from 'joi';
-import { getConnection } from '../db.js';
+import { getConnection } from '../../common/db.js';
 import { randomUUID } from 'node:crypto';
 
 function vehicleValidator() {

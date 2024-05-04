@@ -1,7 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
 
-import { initDb } from './db.js';
+import { initDb } from '../common/db.js';
 
 // Routes
 import { root } from './routes/root.js';

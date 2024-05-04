@@ -1,4 +1,4 @@
-import { getConnection } from '../db.js';
+import { getConnection } from '../../common/db.js';
 
 export async function getChannelId( req, res ) {
   const { vin }= req.params;
