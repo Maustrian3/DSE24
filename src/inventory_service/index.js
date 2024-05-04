@@ -27,11 +27,5 @@ app.get('/vehicles/:vin/channel', getChannelId );
 app.post('/vehicles', createVehicle );
 
 app.listen( parseInt(process.env.REST_PORT), () => {
-  console.log(`Example app listening on port ${process.env.REST_PORT}`);
+  console.log(`Inventory service listening on port ${process.env.REST_PORT}`);
 });
-
-// Do simple test query with connection
-const conn = await getConnection();
-const [result] = await conn.query(`SELECT NOW();`);
-console.table(result); // prints returned time value from server
-
