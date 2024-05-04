@@ -21,3 +21,14 @@ create table inventory_vehicles (
 
 ```
 
+## Curls
+
+### Create vehicle
+```bash
+curl localhost:8080/vehicles -H "Content-Type: application/json" -d "{\"vin\":\"0123456789ABCDEFG\",\"name\":\"kek kar\",\"oem\":\"Renault\",\"model_type\":\"Rennauto\",\"kind\":\"following\"}" -X POST  -v
+```
+
+### Get channel id
+```bash
+curl localhost:8080/vehicles/0123456789ABCDEFG/channel
+```

@@ -1,4 +1,6 @@
 import mysql from 'mysql2/promise';
+import {Connector} from '@google-cloud/cloud-sql-connector';
+
 
 let pool= null;
 let connector= null;

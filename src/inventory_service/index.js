@@ -2,9 +2,8 @@
 import amqplib from 'amqplib';
 import express from 'express';
 import dotenv from 'dotenv';
-import {Connector} from '@google-cloud/cloud-sql-connector';
 
-import { getConnection, initDb, shutdownDb } from './db.js';
+import { initDb } from './db.js';
 
 // Routes
 import { root } from './routes/root.js';
