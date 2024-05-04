@@ -21,8 +21,8 @@ sequenceDiagram
     Follower ->> Beachcomb: Message: current data
     Beachcomb ->> Control: Message: found close vehicles
 
-    Control ->>+ Inventory: GET /vehicle/<id>/channel
-    Inventory ->>- Control: channel id
+    Control ->>+ Inventory: GET /vehicles/<vin>/channel
+    Inventory ->>- Control: channel_id
     
     Control ->> Leading: Message: now leading
     Control ->> Follower: Message: now following
@@ -32,7 +32,7 @@ sequenceDiagram
     Follower ->> Beachcomb: Message: current data (status following)
     Beachcomb ->> Control: Message: following is now following
 
-    Control ->> Beachcomb: Messsage: vehicles not available
+    Control ->> Beachcomb: Message: vehicles not available
     Control ->> Dashboard: Message: log link established
   end
   par Update state
@@ -50,7 +50,7 @@ sequenceDiagram
     Control ->> Leading: stop leading
     Control ->> Follower: stop following
 
-    Control ->> Beachcomb: Messsage: vehicles available
+    Control ->> Beachcomb: Message: vehicles available
     Control ->> Dashboard: Message: log alarm / log timed end
   end
 ```
@@ -68,12 +68,12 @@ sequenceDiagram
   participant Control as Control Service
   Leading ->>+ REST: POST /vehicles
   REST ->>+ Inventory: POST /vehicles
-  Inventory ->>- REST: id
-  REST ->>- Leading: id
+  Inventory ->>- REST: channel_id
+  REST ->>- Leading: channel_id
   Follower ->>+ REST: POST /vehicles
   REST ->>+ Inventory: POST /vehicles
-  Inventory ->>- REST: id
-  REST ->>- Follower: id
+  Inventory ->>- REST: channel_id
+  REST ->>- Follower: channel_id
 ```
 
 ### Connect dashboard to SSE streams
@@ -157,7 +157,16 @@ The JSON body of a new vehicle contains:
 - The `VIN` (vehicle identification number) field is a 17 character string uniquely identifying the vehicle.
 - The `kind` field describes whether the vehicle is leading or following and can be either `leading` or `following`.
 
-#### GET `/vehicles/<id>/channel`
+The JSON body of the response on success:
+```json
+{
+  "channel_id": "..."
+}
+```
+
+- The `channel_id` field is a 36 character UUID v4 string.
+
+#### GET `/vehicles/<vin>/channel`
 Gets the channel id for a vehicle by its id.
 
 The JSON response:
