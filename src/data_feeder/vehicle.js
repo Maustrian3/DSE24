@@ -1,4 +1,4 @@
-import amqplib from 'amqplib';
+import { openWithQueue } from "../common/channel.js";
 
 const NAMES= [
   'Sepps',
@@ -100,12 +100,7 @@ class Vehicle {
   }
 
   async openChannel() {
-    const connection= await amqplib.connect( 'amqp://' + process.env.MQ_HOST_PORT );
-    this.updateChannel= await connection.createChannel();
-    
-    this.updateChannel.assertQueue( process.env.CHANNEL_VEHICLE_UPDATES, {
-      durable: false
-    });
+    this.updateChannel= await openWithQueue( process.env.CHANNEL_VEHICLE_UPDATES );
     
     // TODO: Open direct exchange channel with own channelId
   }
