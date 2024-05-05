@@ -6,6 +6,21 @@ networks:
             config:
                 - subnet: 172.20.0.0/16
 services:
+    rabbitmq:
+        image: rabbitmq:3.13-management-alpine
+        container_name: dse24-rabbitmq
+        networks:
+            static-network:
+                ipv4_address: 172.20.0.10
+        ports:
+            - 5672:5672
+            - 15672:15672
+        healthcheck:
+            test: rabbitmq-diagnostics check_port_connectivity
+            interval: 5s
+            timeout: 5s
+            retries: 5
+            
     inventory:
         image: dse24-inventory-service
         build:
