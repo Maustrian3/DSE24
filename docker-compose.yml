@@ -28,9 +28,14 @@ services:
             dockerfile: ./src/inventory_service/Dockerfile
         networks:
             static-network:
-                ipv4_address: 172.20.0.10
+                ipv4_address: 172.20.0.11
         ports:
             - 8080:80
+        healthcheck:
+            test: wget --no-verbose --tries=1 --spider  http://172.20.0.11/ || exit 1
+            interval: 5s
+            timeout: 5s
+            retries: 5
 
     beachcomb:
         image: dse24-beachcomb-service
@@ -45,3 +50,19 @@ services:
                 ipv4_address: 172.20.0.12
         ports:
             - 8081:80
+
+    datafeeder:
+        image: dse24-data-feeder
+        build:
+            context: ./
+            dockerfile: ./src/data_feeder/Dockerfile
+        depends_on:
+            rabbitmq:
+                condition: service_healthy
+            inventory:
+                condition: service_healthy
+        networks:
+            static-network:
+                ipv4_address: 172.20.0.13
+        ports:
+            - 8082:80

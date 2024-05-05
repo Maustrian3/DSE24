@@ -1,0 +1,16 @@
+{
+  "name": "data_feeder",
+  "version": "1.0.0",
+  "description": "Simulates one or more vehicles",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "ShadowDrive Systems (R)",
+  "license": "MIT",
+  "dependencies": {
+    "amqplib": "^0.10.4",
+    "dotenv": "^16.4.5"
+  }
+}
