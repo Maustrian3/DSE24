@@ -112,12 +112,14 @@ class Vehicle {
       location: {
         long: this.long,
         lat: this.lat,
-        heading: null
+        heading: -1
       },
       speed: this.speed,
       lane: this.lane,
       follow_me: this.followMeStatus()
     };
+
+    console.log('Sending', this.vin, 'location', msg.location);
 
     this.updateChannel.sendToQueue(
       process.env.CHANNEL_VEHICLE_UPDATES,

@@ -7,6 +7,7 @@ import { initDb } from '../common/db.js';
 import { root } from './routes/root.js';
 import { createVehicle } from './routes/createVehicle.js';
 import { getChannelId } from './routes/getChannelId.js';
+import { getKind } from './routes/getKind.js';
 
 
 
@@ -21,6 +22,7 @@ app.use( express.json() );
 
 app.get('/', root );
 app.get('/vehicles/:vin/channel', getChannelId );
+app.get('/vehicles/:vin/kind', getKind );
 app.post('/vehicles', createVehicle );
 
 app.listen( parseInt(process.env.REST_PORT), () => {

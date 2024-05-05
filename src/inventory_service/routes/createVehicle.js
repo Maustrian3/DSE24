@@ -1,6 +1,6 @@
 
 import joi from 'joi';
-import { getConnection } from '../../common/db.js';
+import { getConnection, releaseConnection } from '../../common/db.js';
 import { randomUUID } from 'node:crypto';
 
 function vehicleValidator() {
@@ -28,8 +28,9 @@ export async function createVehicle( req, res ) {
   const channelId= randomUUID();
 
   // Try insert new vehicle into the db
+  let conn;
   try {
-    const conn= await getConnection();
+    conn= await getConnection();
     await conn.execute(
       `INSERT INTO
         inventory_vehicles (vin, name, oem, model_type, is_leading, channel_id)
@@ -45,6 +46,8 @@ export async function createVehicle( req, res ) {
 
     res.status(500).send('Could not create vehicle');
     return;
+  } finally {
+    releaseConnection( conn );
   }
 
   res.send({ channel_id: channelId });

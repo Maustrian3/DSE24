@@ -1,13 +1,13 @@
 import { getConnection, releaseConnection } from '../../common/db.js';
 
-export async function getChannelId( req, res ) {
+export async function getKind( req, res ) {
   const { vin }= req.params;
 
   let conn;
   try {
     conn= await getConnection();
     const [results]= await conn.execute(
-      `SELECT channel_id FROM inventory_vehicles WHERE vin = ?`,
+      `SELECT is_leading FROM inventory_vehicles WHERE vin = ?`,
       [ vin ]
     );
 
@@ -16,7 +16,7 @@ export async function getChannelId( req, res ) {
       return;
     }
 
-    res.send( results[0] );
+    res.send({ kind: results[0].is_leading ? 'leading' : 'following' });
   }  finally {
     releaseConnection( conn );
   }

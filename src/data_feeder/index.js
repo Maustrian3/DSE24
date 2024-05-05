@@ -1,6 +1,6 @@
 
 import dotenv from 'dotenv';
-import { LeadingVehicle } from './vehicle.js';
+import { FollowingVehicle, LeadingVehicle } from './vehicle.js';
 
 dotenv.config();
 
@@ -10,3 +10,15 @@ await leading.openChannel();
 
 leading.startUpdaterTimer();
 
+const following= new FollowingVehicle( 38.2303098, 16.4018315 )
+await following.register();
+await following.openChannel();
+
+following.startUpdaterTimer();
+
+let inside= false;
+setInterval(() => {
+  following.long= inside ? 48.2303098 : 38.2303098;
+  inside= !inside;
+
+}, 7000);

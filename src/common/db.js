@@ -50,3 +50,12 @@ export async function shutdownDb() {
     connector.close();
   }
 }
+
+export function releaseConnection( conn ) {
+  if( !conn ) {
+    return;
+  }
+
+  assertDbInit();
+  pool.releaseConnection( conn );
+}
