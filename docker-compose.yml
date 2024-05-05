@@ -33,12 +33,15 @@ services:
             - 8080:80
 
     beachcomb:
-            image: dse24-beachcomb-service
-            build:
-                context: ./
-                dockerfile: ./src/beachcomb_service/Dockerfile
-            networks:
-                static-network:
-                    ipv4_address: 172.20.0.11
-            ports:
-                - 8081:80
+        image: dse24-beachcomb-service
+        build:
+            context: ./
+            dockerfile: ./src/beachcomb_service/Dockerfile
+        depends_on:
+            rabbitmq:
+                condition: service_healthy
+        networks:
+            static-network:
+                ipv4_address: 172.20.0.12
+        ports:
+            - 8081:80
