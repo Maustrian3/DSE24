@@ -29,12 +29,18 @@ function vehicleUpdateValidator() {
   }).unknown(false).required();
 }
 
-async function findCloseAvailableLeadingVehicles( conn, vin ) {
+async function findCloseAvailableLeadingVehicles( conn, followerVin ) {
+  const results = await getCloseVehicles(conn, followerVin);
 
-  const results = await getCloseVehicles(conn, vin);
-
-  // TODO: Send close vehicles to control service
-  console.log('Found close vins:', results)
+  for( const { vin: leadingVin } of results ) {
+    channel.sendToQueue(
+      process.env.CHANNEL_CLOSE_VEHICLES,
+      Buffer.from( JSON.stringify({
+        VIN_follower: followerVin,
+        VIN_leading: leadingVin
+      }) )
+    );
+  }
 }
 
 async function addNewVehicle(conn, vin, isAvailable, long, lat ) {
@@ -91,7 +97,7 @@ async function updateVehicle(conn, vin, isAvailable, long, lat, results) {
   }
 }
 
-export async function vehicleUpdates( msg ) {
+async function vehicleUpdateConsumer( msg ) {
   const content= JSON.parse( msg.content.toString() );
   const {value: update, error}= vehicleUpdateValidator().validate( content );
   if( error ) {
@@ -102,7 +108,11 @@ export async function vehicleUpdates( msg ) {
   const { vin, location: {long, lat, heading}, follow_me }= update;
   const isAvailable= !follow_me;
 
-  // TODO: Re-Send data to status channel
+  // Send the validated vehicle update to the rest of the system
+  channel.sendToQueue(
+    process.env.CHANNEL_VEHICLE_LOCATIONS,
+    Buffer.from( JSON.stringify( update ) )
+  );
 
   let conn;
   try {
@@ -124,4 +134,12 @@ export async function vehicleUpdates( msg ) {
   } finally {
     releaseConnection( conn );
   }
+}
+
+
+let channel= null;
+export function vehicleUpdates( messageChannel ) {
+  channel= messageChannel;
+
+  return vehicleUpdateConsumer;
 }

@@ -16,9 +16,16 @@ dotenv.config();
 
 await initDb();
 
+// Create message queues
+await openWithQueue( process.env.CHANNEL_VEHICLE_LOCATIONS );
+await openWithQueue( process.env.CHANNEL_CLOSE_VEHICLES );
+
 // Run message queue consumers
 const channel= await openWithQueue( process.env.CHANNEL_VEHICLE_UPDATES );
-channel.consume(process.env.CHANNEL_VEHICLE_UPDATES, vehicleUpdates );
+channel.consume(
+  process.env.CHANNEL_VEHICLE_UPDATES,
+  vehicleUpdates( channel )
+);
 
 
 // Run REST API
