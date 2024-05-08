@@ -1,4 +1,5 @@
 import { getConnection, releaseConnection } from '../../common/db.js';
+import { getVehicleKind } from '../query.js';
 
 export async function getKind( req, res ) {
   const { vin }= req.params;
@@ -6,10 +7,8 @@ export async function getKind( req, res ) {
   let conn;
   try {
     conn= await getConnection();
-    const [results]= await conn.execute(
-      `SELECT is_leading FROM inventory_vehicles WHERE vin = ?`,
-      [ vin ]
-    );
+    
+    const results = await getVehicleKind(conn, vin);
 
     if( results.length < 1 ) {
       res.status(404).send(`Unknown VIN '${vin}'`);

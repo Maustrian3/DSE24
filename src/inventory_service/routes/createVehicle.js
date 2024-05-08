@@ -2,6 +2,7 @@
 import joi from 'joi';
 import { getConnection, releaseConnection } from '../../common/db.js';
 import { randomUUID } from 'node:crypto';
+import { insertNewVehicle } from '../query.js';
 
 function vehicleValidator() {
   return joi.object({
@@ -31,18 +32,22 @@ export async function createVehicle( req, res ) {
   let conn;
   try {
     conn= await getConnection();
-    await conn.execute(
-      `INSERT INTO
-        inventory_vehicles (vin, name, oem, model_type, is_leading, channel_id)
-        VALUES(?, ?, ?, ?, ?, ?)`,
-      [vin, name, oem, model_type, isLeading, channelId]
+    
+    const insertResults= await insertNewVehicle(
+      conn, vin, name, oem, model_type, isLeading, channelId
     );
+    
+    if( insertResults.affectedRows < 1) {
+      throw Error('Could not insert');
+    }
 
   } catch( e ) {
     if( e.code === 'ER_DUP_ENTRY' ) {
       res.status( 422 ).send('Could not create vehicle: Duplicate VIN');
       return;  
     }
+
+    console.error('Could not insert:', e );
 
     res.status(500).send('Could not create vehicle');
     return;
