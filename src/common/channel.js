@@ -7,7 +7,13 @@ export async function ensureChannel() {
   }
 
   console.log('Connection to RabbitMQ...');
-  const connection= await amqplib.connect( 'amqp://' + process.env.MQ_HOST_PORT );
+  const {
+    MQ_USER: user,
+    MQ_PASSWORD: password,
+    MQ_HOST_PORT: hostAndPort
+  }= process.env;
+
+  const connection= await amqplib.connect( `amqp://${user}:${password}@${hostAndPort}` );
   channel= await connection.createChannel();
 
   return channel;
