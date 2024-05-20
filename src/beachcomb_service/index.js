@@ -1,6 +1,6 @@
 import express from 'express';
 import dotenv from 'dotenv';
-import { openWithQueue } from "../common/channel.js";
+import { openWithBroadcastExchange, openWithQueue } from "../common/channel.js";
 import { initDb } from '../common/db.js';
 
 // Routes
@@ -17,7 +17,7 @@ dotenv.config();
 await initDb();
 
 // Create message queues
-await openWithQueue( process.env.CHANNEL_VEHICLE_LOCATIONS );
+await openWithBroadcastExchange( process.env.CHANNEL_VEHICLE_LOCATIONS );
 await openWithQueue( process.env.CHANNEL_CLOSE_VEHICLES );
 
 // Run message queue consumers

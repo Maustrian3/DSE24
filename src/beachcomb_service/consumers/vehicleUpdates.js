@@ -109,8 +109,8 @@ async function vehicleUpdateConsumer( msg ) {
   const isAvailable= !follow_me;
 
   // Send the validated vehicle update to the rest of the system
-  channel.sendToQueue(
-    process.env.CHANNEL_VEHICLE_LOCATIONS,
+  channel.publish(
+    process.env.CHANNEL_VEHICLE_LOCATIONS, '',
     Buffer.from( JSON.stringify( update ) )
   );
 
