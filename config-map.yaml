@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dse24-config
+  labels:
+    name: dse24-config
+    app: dse24-deployment
+  namespace: development
+data:
+  NODE_ENV: development
+  MYSQL_HOST: 34.159.164.155
+  MYSQL_PORT: '3306'
+  MYSQL_DATABASE: dse24
+  MQ_HOST_PORT: 34.65.132.160:5672
+  INVENTORY_HOST: inventory.development.svc.cluster.local
+  BEACHCOMB_HOST: beachcomb.development.svc.cluster.local
+  CONTROL_HOST: control.development.svc.cluster.local
+  DASHBOARD_HOST: dashboard.development.svc.cluster.local

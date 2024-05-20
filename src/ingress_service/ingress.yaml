@@ -1,0 +1,39 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: ingress
+  annotations:
+    kubernetes.io/ingress.class: "gce"
+    kubernetes.io/ingress.global-static-ip-name: "ingress-static-ip"
+spec:
+  rules:
+  - http:
+      paths:
+      - path: /inventory
+        pathType: Prefix
+        backend:
+          service:
+            name: inventory
+            port:
+              number: 80
+      - path: /beachcomb
+        pathType: Prefix
+        backend:
+          service:
+            name: beachcomb
+            port:
+              number: 80
+      # - path: /control
+      #   pathType: Prefix
+      #   backend:
+      #     service:
+      #       name: control
+      #       port:
+      #         number: 80
+      # - path: /dashboard
+      #   pathType: Prefix
+      #   backend:
+      #     service:
+      #       name: dashboard
+      #       port:
+      #         number: 80

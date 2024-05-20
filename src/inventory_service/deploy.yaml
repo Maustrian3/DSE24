@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: inventory
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: inventory
+  template:
+    metadata:
+      labels:
+        app: inventory
+    spec:
+      containers:
+      - name: inventory
+        image: studenten/inventory:$LATEST_COMMIT_HASH
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        env:
+        - name: MYSQL_USER
+          valueFrom:
+            secretKeyRef:
+              name: dse24-secret
+              key: MYSQL_USER
+        - name: MYSQL_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: dse24-secret
+              key: MYSQL_PASSWORD
+        envFrom:
+        - configMapRef:
+            name: dse24-config
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: 80
+            scheme: HTTP
