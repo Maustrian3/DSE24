@@ -32,7 +32,12 @@ channel.consume(
 const app= express();
 app.use( express.json() );
 
-app.get('/', root );
+const router= express.Router();
+
+router.get('/', root );
+
+app.use('/', router);
+app.use(`/${process.env.SERVICE_PREFIX}`, router);
 
 app.listen( parseInt(process.env.REST_PORT), () => {
   console.log(`Beachcomb service listening on port ${process.env.REST_PORT}`);

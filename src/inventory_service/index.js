@@ -20,10 +20,15 @@ await initDb();
 const app= express();
 app.use( express.json() );
 
-app.get('/', root );
-app.get('/vehicles/:vin/channel', getChannelId );
-app.get('/vehicles/:vin/kind', getKind );
-app.post('/vehicles', createVehicle );
+const router= express.Router();
+
+router.get('/', root );
+router.get('/vehicles/:vin/channel', getChannelId );
+router.get('/vehicles/:vin/kind', getKind );
+router.post('/vehicles', createVehicle );
+
+app.use('/', router);
+app.use(`/${process.env.SERVICE_PREFIX}`, router);
 
 app.listen( parseInt(process.env.REST_PORT), () => {
   console.log(`Inventory service listening on port ${process.env.REST_PORT}`);
