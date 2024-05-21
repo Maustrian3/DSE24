@@ -20,21 +20,21 @@ echo "#### Updating config map ####"
 cat config-map.yaml | envsubst | kubectl apply -f -
 
 echo "#### Running services ####"
-cat rabbitmq_service/deploy.yaml | envsubst | kubectl apply -f -
-cat rabbitmq_service/service.yaml | envsubst | kubectl apply -f -
+cat src/rabbitmq_service/deploy.yaml | envsubst | kubectl apply -f -
+cat src/rabbitmq_service/service.yaml | envsubst | kubectl apply -f -
 
-cat beachcomb_service/deploy.yaml | envsubst | kubectl apply -f -
-cat beachcomb_service/service.yaml | envsubst | kubectl apply -f -
+cat src/beachcomb_service/deploy.yaml | envsubst | kubectl apply -f -
+cat src/beachcomb_service/service.yaml | envsubst | kubectl apply -f -
 
-cat inventory_service/deploy.yaml | envsubst | kubectl apply -f -
-cat inventory_service/service.yaml | envsubst | kubectl apply -f -
+cat src/inventory_service/deploy.yaml | envsubst | kubectl apply -f -
+cat src/inventory_service/service.yaml | envsubst | kubectl apply -f -
 
-# cat control_service/deploy.yaml | envsubst | kubectl apply -f -
-# cat control_service/service.yaml | envsubst | kubectl apply -f -
+# cat src/control_service/deploy.yaml | envsubst | kubectl apply -f -
+# cat src/control_service/service.yaml | envsubst | kubectl apply -f -
 
-# cat dashboard_service/deploy.yaml | envsubst | kubectl apply -f -
-# cat dashboard_service/service.yaml | envsubst | kubectl apply -f -
+# cat src/dashboard_service/deploy.yaml | envsubst | kubectl apply -f -
+# cat src/dashboard_service/service.yaml | envsubst | kubectl apply -f -
 
-cat ingress_service/ingress.yaml | envsubst | kubectl apply -f -
+cat src/ingress_service/ingress.yaml | envsubst | kubectl apply -f -
 
 
