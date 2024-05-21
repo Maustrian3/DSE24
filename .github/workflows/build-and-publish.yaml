@@ -29,7 +29,7 @@ jobs:
       - name: Build and push Beachcomb Service
         uses: docker/build-push-action@v4
         with:
-          context: ./src/beachcomb_service
+          context: .
           file: ./src/beachcomb_service/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/beachcomb:${{ github.sha }}
@@ -37,7 +37,7 @@ jobs:
       - name: Build and push Inventory Service
         uses: docker/build-push-action@v4
         with:
-          context: ./src/inventory_service
+          context: .
           file: ./src/inventory_service/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/inventory:${{ github.sha }}
@@ -45,7 +45,7 @@ jobs:
       # - name: Build and push Control Service
       #   uses: docker/build-push-action@v4
       #   with:
-      #     context: ./src/control_service
+      #     context: .
       #     file: ./src/control_service/Dockerfile
       #     push: true
       #     tags: ${{ secrets.DOCKER_USERNAME }}/control:${{ github.sha }}
@@ -53,7 +53,7 @@ jobs:
       # - name: Build and push Dashboard Service
       #   uses: docker/build-push-action@v4
       #   with:
-      #     context: ./src/dashboard_service
+      #     context: .
       #     file: ./src/dashboard_service/Dockerfile
       #     push: true
       #     tags: ${{ secrets.DOCKER_USERNAME }}/dashboard:${{ github.sha }}
