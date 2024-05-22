@@ -62,6 +62,8 @@ async function addNewVehicle(conn, vin, isAvailable, long, lat ) {
   if( !isLeading && isAvailable ) {
     await findCloseAvailableLeadingVehicles( conn, vin );
   }
+
+  return isLeading;
 }
 
 async function updateVehicle(conn, vin, isAvailable, long, lat, results) {
@@ -108,13 +110,7 @@ async function vehicleUpdateConsumer( msg ) {
   const { vin, location: {long, lat, heading}, follow_me }= update;
   const isAvailable= !follow_me;
 
-  // Send the validated vehicle update to the rest of the system
-  channel.publish(
-    process.env.CHANNEL_VEHICLE_LOCATIONS, '',
-    Buffer.from( JSON.stringify( update ) )
-  );
-
-  let conn;
+  let conn, isLeading;
   try {
     conn= await getConnection();
 
@@ -122,11 +118,11 @@ async function vehicleUpdateConsumer( msg ) {
 
     // Insert new line and do distance check if vin doesn't exist
     if( !results.length ) {
-      await addNewVehicle(conn, vin, isAvailable, long, lat);
-      return;
+      isLeading= await addNewVehicle(conn, vin, isAvailable, long, lat);
+    } else {
+      isLeading= results[0].is_leading;
+      await updateVehicle(conn, vin, isAvailable, long, lat, results);
     }
-    
-    await updateVehicle(conn, vin, isAvailable, long, lat, results);
 
   } catch( e ) {
     console.error('Could not process vehicle update message:', e);
@@ -134,6 +130,15 @@ async function vehicleUpdateConsumer( msg ) {
   } finally {
     releaseConnection( conn );
   }
+
+  // Send the validated vehicle update to the rest of the system
+  channel.publish(
+    process.env.CHANNEL_VEHICLE_LOCATIONS, '',
+    Buffer.from( JSON.stringify({
+      ...update,
+      kind: isLeading ? 'leading' : 'following'
+    }) )
+  );
 }
 
 
