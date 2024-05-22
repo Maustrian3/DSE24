@@ -5,7 +5,7 @@ import { initDb } from '../common/db.js';
 
 // Routes
 import { root } from './routes/root.js';
-// TODO: route getAllPositions
+import { vehiclePositions } from './routes/vehiclePositions.js';
 
 // Consumers
 import { vehicleUpdates } from './consumers/vehicleUpdates.js';
@@ -36,6 +36,7 @@ app.use( express.json() );
 const router= express.Router();
 
 router.get('/', root );
+router.get('/vehicles/positions', vehiclePositions );
 
 app.use('/', router);
 app.use(`/${process.env.SERVICE_PREFIX}`, router);

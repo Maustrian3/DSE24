@@ -36,10 +36,20 @@ export async function getCloseVehicles( conn, vin, distance= 200 ) {
       vin <> ? AND
       is_available = 1 AND
       is_leading = 1 AND
-      TIMESTAMPDIFF(SECOND, last_distance_check, ?) < 600 AND
+      TIMESTAMPDIFF(SECOND, last_distance_check, ?) < 60 AND
       ST_DISTANCE_SPHERE(position, (SELECT position FROM beachcomb_vehicles WHERE vin = ?)) <= ?`,
     [vin, new Date(), vin, distance]
   );
   
+  return results;
+}
+
+export async function getActiveVehiclePositions( conn ) {
+  const [results]= await conn.execute(
+    `select vin, ST_X(position) as longitude, ST_Y(position) as latitude, is_leading
+    from beachcomb_vehicles where TIMESTAMPDIFF(SECOND, last_distance_check, ?) < 60`,
+    [new Date()]
+  );
+
   return results;
 }

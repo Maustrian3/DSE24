@@ -7,9 +7,13 @@ import { openWithBroadcastListener, ensureChannel } from '../common/channel.js';
 // Routes
 import { logs } from './routes/logs.js';
 import { logEvents } from './routes/logEvents.js';
+import { map } from './routes/map.js';
+import { vehicles } from './routes/vehicles.js';
+import { vehicleEvents } from './routes/vehicleEvents.js';
 
 // Consumers
 import { logMessage } from './consumers/logMessage.js';
+import { vehicleLocationMessage } from './consumers/vehicleLocationMessage.js';
 
 dotenv.config();
 
@@ -28,11 +32,11 @@ channel.consume(
   logMessage( sseLogChannel )
 );
 
-/*const vehicleQueue= await openWithBroadcastListener( process.env.CHANNEL_VEHICLE_LOCATIONS );
+const vehicleQueue= await openWithBroadcastListener( process.env.CHANNEL_VEHICLE_LOCATIONS );
 channel.consume(
   vehicleQueue.queue,
   vehicleLocationMessage( sseVehicleChannel )
-);*/
+);
 
 // Run REST API
 const app = express();
@@ -43,9 +47,9 @@ router.use( express.static('./public') );
 
 router.get('/logs', logs );
 router.get('/logs/live', logEvents( sseLogChannel ) );
-// router.get('/map', );
-// router.get('/vehicles', );
-// router.get('/vehicles/live', );
+router.get('/map', map);
+router.get('/vehicles', vehicles);
+router.get('/vehicles/live', vehicleEvents( sseVehicleChannel ) );
 
 app.use('/', router);
 app.use(`/${process.env.SERVICE_PREFIX}`, router);

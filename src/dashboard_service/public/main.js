@@ -22,7 +22,36 @@ function showLogLine( line, prepend= false ) {
     .appendChild( document.createElement('code') ).innerText= JSON.stringify(line.data);
 }
 
-async function loadMap() {}
+const leadingIcon= L.divIcon({className: 'leading-marker-icon'});
+const followingIcon= L.divIcon({className: 'following-marker-icon'});
+
+const knownVehicles= new Map();
+function showVehicleMarker( map, vehicle ) {
+  const {long, lat}= vehicle.location;
+  const entry= knownVehicles.get( vehicle.vin );
+  if( entry ) {
+    entry.setLatLng([long, lat]);
+    return;
+  }
+
+  const icon= vehicle.kind === 'leading' ? leadingIcon : followingIcon;
+  const marker= L.marker([long, lat], {icon}).bindPopup(`VIN: ${vehicle.vin}<br>Kind: ${vehicle.kind}`).addTo( map );
+  knownVehicles.set( vehicle.vin, marker );
+}
+
+async function loadMap() {
+  const resp= await fetch('/map');
+  const {long, lat, zoom}= await resp.json();
+
+  const map = L.map('leaflet-map').setView([long, lat], zoom);
+  L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+    maxZoom: 19,
+    attribution:
+      '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>',
+  }).addTo(map);
+
+  return map;
+}
 
 async function loadOldLogs() {
   const resp= await fetch('/logs');
@@ -30,7 +59,11 @@ async function loadOldLogs() {
   logs.forEach( line => showLogLine(line) );
 }
 
-async function loadAllVehicles() {}
+async function loadAllVehicles( map ) {
+  const resp= await fetch('/vehicles');
+  const vehicles= await resp.json();
+  vehicles.forEach( vehicle => showVehicleMarker( map, vehicle ) );
+}
 
 function subscribeLogEvents() {
   const sse= new EventSource('./logs/live');
@@ -38,16 +71,20 @@ function subscribeLogEvents() {
   sse.onmessage= e => showLogLine( JSON.parse(e.data), true );
 }
 
-function subscribeVehicleEvents() {}
+function subscribeVehicleEvents( map ) {
+  const sse= new EventSource('./vehicles/live');
+  sse.onerror= () => alert('Server connection for vehicle events closed');
+  sse.onmessage= e => showVehicleMarker( map, JSON.parse(e.data) );
+}
 
 (async function() {
 
-  await loadMap();
+  const map= await loadMap();
   await loadOldLogs();
-  await loadAllVehicles();
+  await loadAllVehicles( map );
 
   subscribeLogEvents();
-  subscribeVehicleEvents();
+  subscribeVehicleEvents( map );
   
 })();
 
