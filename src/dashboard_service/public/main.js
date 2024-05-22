@@ -54,13 +54,13 @@ async function loadMap() {
 }
 
 async function loadOldLogs() {
-  const resp= await fetch('/logs');
+  const resp= await fetch('./logs');
   const logs= await resp.json();
   logs.forEach( line => showLogLine(line) );
 }
 
 async function loadAllVehicles( map ) {
-  const resp= await fetch('/vehicles');
+  const resp= await fetch('./vehicles');
   const vehicles= await resp.json();
   vehicles.forEach( vehicle => showVehicleMarker( map, vehicle ) );
 }
