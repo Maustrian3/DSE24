@@ -67,13 +67,13 @@ async function loadAllVehicles( map ) {
 
 function subscribeLogEvents() {
   const sse= new EventSource('./logs/live');
-  sse.onerror= () => alert('Server connection for log events closed');
+  sse.onerror= e => console.error('Server connection for log events closed', e);
   sse.onmessage= e => showLogLine( JSON.parse(e.data), true );
 }
 
 function subscribeVehicleEvents( map ) {
   const sse= new EventSource('./vehicles/live');
-  sse.onerror= () => alert('Server connection for vehicle events closed');
+  sse.onerror= e => console.error('Server connection for vehicle events closed', e);
   sse.onmessage= e => showVehicleMarker( map, JSON.parse(e.data) );
 }
 
