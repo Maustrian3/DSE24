@@ -6,16 +6,32 @@ export async function ensureChannel() {
     return;
   }
 
-  console.log('Connection to RabbitMQ...');
+  console.log('Connecting to RabbitMQ...');
   const {
     MQ_USER: user,
     MQ_PASSWORD: password,
     MQ_HOST_PORT: hostAndPort
   }= process.env;
 
-  const connection= await amqplib.connect( `amqp://${user}:${password}@${hostAndPort}` );
-  channel= await connection.createChannel();
+  let connection= null;
 
+  const attempts= Math.max( 1, parseInt(process.env.MQ_CONNECT_ATTEMPTS) ) || 3;
+  for( let i= 0; i< attempts; i++ ) {
+    try {
+      connection= await amqplib.connect( `amqp://${user}:${password}@${hostAndPort}` );
+
+    } catch( e ) {
+      console.log('Could not connect to RabbitMQ:', e.code || e.name);
+      if( i < attempts-1 ) {
+        console.log(`Retrying... (attempt ${i+1}/${attempts})`)
+        continue;
+      }
+
+      throw e;
+    }
+  }
+
+  channel= await connection.createChannel();
   return channel;
 }
 

@@ -12,6 +12,26 @@ spec:
       labels:
         app: beachcomb
     spec:
+      initContainers:
+      - name: check-rabbitmq-ready
+        image: busybox
+        env:
+        - name: MQ_USER
+          valueFrom:
+            secretKeyRef:
+              name: dse24-secret
+              key: MQ_USER
+        - name: MQ_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: dse24-secret
+              key: MQ_PASSWORD
+        command: [
+          'sh', '-c',
+          'until wget "http://$MQ_USER:$MQ_PASSWORD@rabbitmq.development.svc.cluster.local:15672/api/aliveness-test/%2F"; do
+           echo waiting for RabbitMQ;
+           sleep 2; done; '
+        ]
       containers:
       - name: beachcomb
         image: studenten/beachcomb:$LATEST_COMMIT_HASH
