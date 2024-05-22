@@ -39,14 +39,14 @@ export async function openWithQueue( queueName, args= {} ) {
   await ensureChannel();
 
   args= { durable: false, ...args };
-  channel.assertQueue(queueName, args);
+  await channel.assertQueue(queueName, args);
 
   return channel;
 }
 
 async function openWithExchange( exchangeName, type, args ) {
   await ensureChannel();
-  channel.assertExchange(exchangeName, type, args);
+  await channel.assertExchange(exchangeName, type, args);
   return channel;
 }
 

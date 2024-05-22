@@ -66,3 +66,17 @@ services:
                 ipv4_address: 172.20.0.13
         ports:
             - 8082:80
+
+    dashboard:
+        image: dse24-dashboard-service
+        build:
+            context: ./
+            dockerfile: ./src/dashboard_service/Dockerfile
+        depends_on:
+            rabbitmq:
+                condition: service_healthy
+        networks:
+            static-network:
+                ipv4_address: 172.20.0.14
+        ports:
+            - 8083:80
