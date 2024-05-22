@@ -40,7 +40,7 @@ function showVehicleMarker( map, vehicle ) {
 }
 
 async function loadMap() {
-  const resp= await fetch('/map');
+  const resp= await fetch('./map');
   const {long, lat, zoom}= await resp.json();
 
   const map = L.map('leaflet-map').setView([long, lat], zoom);
