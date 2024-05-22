@@ -5,6 +5,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ShadowDrive Dashboard</title>
+  <script type="module" src="/main.js" defer></script>
   <link rel="stylesheet" href="/style.css">
 </head>
 <body>
@@ -12,11 +13,21 @@
     <img src="/logo.png">
   </header>
   <main>
-    <section>
+    <section id="map">
       Map
     </section>
-    <section>
-      Logs
+    <section id="logs">
+      <table>
+        <thead>
+          <tr>
+            <th>Time</th>
+            <th>Severity</th>
+            <th>Message</th>
+            <th>Data</th>
+          </tr>
+        </thead>
+        <tbody id="log-rows"></tbody>
+      </table>
     </section>
   </main>
   <footer>
