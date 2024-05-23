@@ -5,7 +5,7 @@ import { initDb } from '../common/db.js';
 
 // Routes
 import { root } from './routes/root.js';
-// TODO: route getAllPositions
+import { vehiclePositions } from './routes/vehiclePositions.js';
 
 // Consumers
 import { vehicleUpdates } from './consumers/vehicleUpdates.js';
@@ -18,6 +18,7 @@ await initDb();
 
 // Create message queues
 await openWithBroadcastExchange( process.env.CHANNEL_VEHICLE_LOCATIONS );
+await openWithBroadcastExchange( process.env.CHANNEL_LOGS );
 await openWithQueue( process.env.CHANNEL_CLOSE_VEHICLES );
 
 // Run message queue consumers
@@ -35,10 +36,16 @@ app.use( express.json() );
 const router= express.Router();
 
 router.get('/', root );
+router.get('/vehicles/positions', vehiclePositions );
 
 app.use('/', router);
 app.use(`/${process.env.SERVICE_PREFIX}`, router);
 
 app.listen( parseInt(process.env.REST_PORT), () => {
-  console.log(`Beachcomb service listening on port ${process.env.REST_PORT}`);
+  const message= `Beachcomb service listening on port ${process.env.REST_PORT}`;
+  console.log( message );
+  channel.publish(
+    process.env.CHANNEL_LOGS, '',
+    Buffer.from( JSON.stringify({ time: Date.now(), severity: 'info', message, type: 'log', data: null }) )
+  );
 });

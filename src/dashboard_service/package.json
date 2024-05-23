@@ -1,7 +1,7 @@
 {
-  "name": "data_feeder",
+  "name": "dashboard_service",
   "version": "1.0.0",
-  "description": "Simulates one or more vehicles",
+  "description": "Web Dashboard",
   "main": "index.js",
   "type": "module",
   "scripts": {
@@ -10,7 +10,8 @@
   "author": "ShadowDrive Systems (R)",
   "license": "MIT",
   "dependencies": {
+    "better-sse": "^0.12.1",
     "dotenv": "^16.4.5",
-    "minimist": "^1.2.8"
+    "express": "^4.19.2"
   }
 }

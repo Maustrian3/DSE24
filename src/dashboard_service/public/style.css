@@ -1,0 +1,42 @@
+
+main {
+  display: flex;
+  flex-direction: row;
+  align-content: flex-start;
+  align-items: flex-start;
+  gap: 3rem;
+}
+
+#map {
+
+}
+
+#leaflet-map {
+  width: max(600px, 45vw);
+  height: min(90vh, 600px);
+
+  .leading-marker-icon {
+    width: 10px;
+    height: 10px;
+    border-radius: 100%;
+    background-color: red;
+  }
+
+  .following-marker-icon {
+    width: 10px;
+    height: 10px;
+    border-radius: 100%;
+    background-color: blue;
+  }
+}
+
+#logs {
+  flex-grow: 1;
+  max-height: 90vh;
+  overflow-y: scroll;
+
+  td {
+    padding-right: 1rem;
+    padding-bottom: 0.5rem;
+  }
+}
