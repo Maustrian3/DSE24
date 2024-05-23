@@ -98,6 +98,7 @@ async function updateVehicle(conn, vin, isAvailable, long, lat, results) {
 }
 
 async function vehicleUpdateConsumer( msg ) {
+  channel.ack(msg);
   const content= JSON.parse( msg.content.toString() );
   const {value: update, error}= vehicleUpdateValidator().validate( content );
   if( error ) {
