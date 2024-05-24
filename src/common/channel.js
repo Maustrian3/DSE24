@@ -69,7 +69,7 @@ export async function openWithDirectExchange( exchangeName, args= {} ) {
 
 export async function openWithBroadcastListener( exchangeName, args= {} ) {
   await openWithBroadcastExchange( exchangeName, args.assertExchange || {} );
-  const queue= await channel.assertQueue('', { exclusive: true, ...(args.assertQueue || {}) })
+  const queue= await channel.assertQueue('', { exclusive: true, ...(args.assertQueue || {}) });
 
   channel.bindQueue(queue.queue, exchangeName, '');
 

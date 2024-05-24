@@ -53,3 +53,14 @@ export async function getActiveVehiclePositions( conn ) {
 
   return results;
 }
+
+export async function updateVehicleAvailability( conn, vins, availability ) {
+  const [updateResult] = await conn.execute(
+    `update beachcomb_vehicles set
+        is_available= ?
+        where vin in (${ '?,'.repeat( vins.length ).slice(0, -1) })`,
+    [availability, ...vins]
+  );
+  
+  return updateResult;
+}

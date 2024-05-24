@@ -9,6 +9,7 @@ import { vehiclePositions } from './routes/vehiclePositions.js';
 
 // Consumers
 import { vehicleUpdates } from './consumers/vehicleUpdates.js';
+import { vehicleAvailability } from './consumers/vehicleAvailability.js';
 
 
 // Load .env file
@@ -27,6 +28,12 @@ channel.consume(
   process.env.CHANNEL_VEHICLE_UPDATES,
   vehicleUpdates( channel )
 );
+
+await openWithQueue( process.env.CHANNEL_VEHICLE_AVAILABILITY );
+channel.consume(
+  process.env.CHANNEL_VEHICLE_AVAILABILITY,
+  vehicleAvailability
+)
 
 
 // Run REST API
