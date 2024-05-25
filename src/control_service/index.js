@@ -30,7 +30,7 @@ channel.consume(
 const vehicleQueue= await openWithBroadcastListener( process.env.CHANNEL_VEHICLE_LOCATIONS );
 channel.consume(
   vehicleQueue.queue,
-  vehicleLocationMessage
+  vehicleLocationMessage(channel, memcached)
 );
 
 // Run REST API

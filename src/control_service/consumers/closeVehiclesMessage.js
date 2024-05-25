@@ -47,16 +47,24 @@ export function closeVehiclesMessage( channel, memcached ) {
       
       // Create memcached entry
       const entry= {
-        followingVIN, 
-        lastCommand: null,
-        currentCommand: null,
-        leadingChannelId,
-        followingChannelId, 
-        lastLeadingUpdate: new Date().toISOString(), 
-        lastFollowingUpdate: new Date().toISOString()
+        following: {
+          vin: followingVIN,
+          lastUpdate: new Date().toISOString(),
+          channelId: followingChannelId,
+          lane: null,
+          speed: null
+        },
+        leading: {
+          vin: leadingVIN,
+          lastUpdate: new Date().toISOString(),
+          channelId: leadingChannelId,
+          lastCommand: null,
+          currentCommand: null
+        }
       };
 
       await memcached.set(`leading-${leadingVIN}`, entry, maxTime);
+      await memcached.set(`following-${followingVIN}`, { leadingVIN }, maxTime);
 
       console.log('Inserted memcached data', entry);
 
