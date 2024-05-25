@@ -5,9 +5,6 @@ export async function logs(req, res) {
   const from = new Date( parseInt(req.query.from) || 0 );
   const to= new Date( parseInt(req.query.to) || Date.now() );
   
-  console.log('from', from);
-  console.log('to', to);
-
   let conn= null;
 
   try {
