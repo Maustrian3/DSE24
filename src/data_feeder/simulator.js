@@ -1,7 +1,6 @@
 import {FollowingVehicle, LeadingVehicle} from "./vehicle.js";
 
 import * as turf from '@turf/turf';
-import {openWithDirectExchange, openWithDirectExchangeListener, openWithQueue} from "../common/channel.js";
 
 export class Simulator {
   constructor() {
@@ -49,58 +48,6 @@ export class Simulator {
   stopVehicles() {
     this.leadingVehicle.speed = 0;
     this.followingVehicle.speed = 0;
-  }
-
-  // FIXME: Remove - Mock Control service:
-  async startMockControlService() {
-    const leadExchange = this.leadingVehicle.channelId.toString();
-    const followExchange = this.followingVehicle.channelId.toString();
-
-    const leadControlChannel = await openWithDirectExchangeListener(leadExchange);
-    const followControlChannel = await openWithDirectExchangeListener(followExchange);
-
-    // Every 3 seconds check if vehicles are in range of each other and act accordingly
-    setInterval(async () => {
-
-      const leadingCoord = turf.point([this.leadingVehicle.long, this.leadingVehicle.lat]);
-      const followingCoord = turf.point([this.followingVehicle.long, this.followingVehicle.lat]);
-      const distanceBetweenVehicles = turf.distance(leadingCoord, followingCoord, { units: 'kilometers' });
-
-      console.log('Distance between vehicles: ', distanceBetweenVehicles, ' kilometers')
-
-      if(distanceBetweenVehicles > 0.2) {
-        return;
-      }
-
-      const leadMsg = {
-        time: new Date().toISOString(),
-        follow_me: {
-          VIN: this.followingVehicle.vin
-        }
-      };
-      const followMsg = {
-        time: new Date().toISOString(),
-        follow_me: {
-          VIN: this.leadingVehicle.vin,
-          speed: this.leadingVehicle.speed,
-          lane: this.leadingVehicle.lane
-        }
-      };
-
-      const routingKey = '';
-
-      followControlChannel.publish(
-        followExchange,
-        routingKey,
-        Buffer.from(JSON.stringify(followMsg))
-      );
-      leadControlChannel.publish(
-        leadExchange,
-        routingKey,
-        Buffer.from(JSON.stringify(leadMsg))
-      );
-    }, 3000);
-    // TODO Mock stop following
   }
 }
 
