@@ -1,4 +1,4 @@
-import {openWithDirectExchange, openWithDirectExchangeListener, openWithQueue} from "../common/channel.js";
+import {openWithDirectExchangeListener, openWithQueue} from "../common/channel.js";
 
 import {ADJECTIVES, NAMES, NOUNS} from "./vehicleNameConstants.js";
 
@@ -21,7 +21,7 @@ class Vehicle {
     this.oem = null;
     this.model_type = null;
     this.channelId = null;
-    this.updateChannel = null;
+    this.messageChannel = null;
 
     this.updateInterval = 2000;
     this.updaterTimer = null;
@@ -76,24 +76,26 @@ class Vehicle {
   }
 
   async openChannel() {
-
     // Channel for updates sent to the Beachcomb service
-    this.updateChannel = await openWithQueue(process.env.CHANNEL_VEHICLE_UPDATES);
+    this.messageChannel = await openWithQueue(process.env.CHANNEL_VEHICLE_UPDATES);
 
     // Channel for updates received from the Control service
-    this.controlChannel = await openWithDirectExchangeListener(this.channelId);
-    this.controlChannel.consume(
-      this.channelId + "_queue",
-      (msg) => {
-        if (msg !== null) {
-          const content = JSON.parse(msg.content.toString());
-          this.followMeUpdate(content);
-        } else {
-          console.log("Consumer cancelled by server");
+    const controlQueue = await openWithDirectExchangeListener(
+      process.env.CHANNEL_CONTROL_MESSAGES,
+      this.channelId
+    );
+    this.messageChannel.consume( controlQueue.queue, msg => {
+        if( !msg ) {
+          console.error('Consumer cancelled by server');
+          return;
         }
+
+        const content = JSON.parse( msg.content.toString() );
+        console.log('Control message received', content);
+
+        this.followMeUpdate(content);
       },
       { noAck: true }
-      //vehicleControlUpdateConsumer();
     );
   }
 
@@ -122,9 +124,9 @@ class Vehicle {
       ' | Location:', msg.location.long, msg.location.lat,
       ' | Speed: ', msg.speed,
       ' | Lane: ', msg.lane,
-      ' | FollowME: ', msg.follow_me);
+      ' | FollowMe: ', msg.follow_me);
 
-    this.updateChannel.sendToQueue(
+    this.messageChannel.sendToQueue(
       process.env.CHANNEL_VEHICLE_UPDATES,
       Buffer.from(JSON.stringify(msg))
     );
@@ -143,8 +145,6 @@ class Vehicle {
       this.sendUpdate();
     }, this.updateInterval);
   }
-
-
 }
 
 export class LeadingVehicle extends Vehicle {
@@ -203,11 +203,3 @@ export class FollowingVehicle extends Vehicle {
     }
   }
 }
-
-// export function vehicleControlUpdateConsumer(msg) {
-//   const content = JSON.parse(msg.content.toString());
-//   console.log('Received control update:', content);
-//
-//
-//   // console.log('Received control update:', content);
-// }

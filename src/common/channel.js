@@ -73,17 +73,14 @@ export async function openWithBroadcastListener( exchangeName, args= {} ) {
 
   channel.bindQueue(queue.queue, exchangeName, '');
 
-  return queue; // TODO ask why return the queue here?
+  return queue;
 }
 
-export async function openWithDirectExchangeListener( exchangeName, args= {} ) {
-  await openWithDirectExchange(exchangeName, args.assertExchange || {});
-  const queueName = exchangeName + "_queue";
-  const queue= await channel.assertQueue(queueName, { exclusive: false, durable: false, ...(args.assertQueue || {}) })
+export async function openWithDirectExchangeListener( exchangeName, filterId, args= {} ) {
+  await openWithDirectExchange(exchangeName, args.assertExchange || {} );
+  const queue= await channel.assertQueue('', { exclusive: true, ...(args.assertQueue || {}) });
 
-  channel.bindQueue(queue.queue, exchangeName, "");
+  channel.bindQueue(queue.queue, exchangeName, filterId);
 
-  return channel;
+  return queue;
 }
-
-// TODO cleanup
