@@ -101,7 +101,8 @@ class Vehicle {
 
   move() {
     const distanceTravelled = this.speed * (this.updateInterval / 1000 / 60 / 60);
-    const newCoord = turf.destination(turf.point([this.long, this.lat]), distanceTravelled, this.heading, {units: 'kilometers'});
+    const location = turf.point([this.long, this.lat]);
+    const newCoord = turf.destination(location, distanceTravelled, this.heading, {units: 'kilometers'});
     this.long = newCoord.geometry.coordinates[0];
     this.lat = newCoord.geometry.coordinates[1];
   }

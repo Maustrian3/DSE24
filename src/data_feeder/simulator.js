@@ -10,17 +10,17 @@ export class Simulator {
 
   createVehicles() {
     
-    let long = 44.55984;
-    let lat = -98.98901;
+    let long = -98.98901;
+    let lat = 44.55984;
     const distanceBetweenVehicles = 0.3; //  in km
-    const heading = 90; // 90 degrees = east
+    const heading = 0; // 0 degrees = north
 
     this.leadingVehicle = new LeadingVehicle(long, lat, heading, 40);
 
     let nextCoord = turf.destination(
       turf.point([long, lat]),
       distanceBetweenVehicles,
-      -heading,
+      heading - 180,
       { units: "kilometers" }
     );
 
