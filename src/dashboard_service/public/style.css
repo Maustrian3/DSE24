@@ -30,13 +30,35 @@ main {
   }
 }
 
+header {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+
+  & img {
+    height: 4rem;
+  }
+}
+
 #logs {
   flex-grow: 1;
   max-height: 90vh;
   overflow-y: scroll;
+  
+  table {
+    border-collapse: collapse;
+  }
 
   td {
     padding-right: 1rem;
     padding-bottom: 0.5rem;
+  }
+
+  tr.alarm td {
+    background-color: #ff8181;
+  }
+
+  tr.warn td {
+    background-color: #ffe881;
   }
 }

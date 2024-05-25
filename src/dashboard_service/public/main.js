@@ -12,6 +12,8 @@ function showLogLine( line, prepend= false ) {
     rows.append( row );
   }
 
+  row.classList.add( line.severity );
+
   row.appendChild( document.createElement('td') ).innerText= formattedDate;
   row.appendChild( document.createElement('td') ).innerText= line.severity;
   row.appendChild( document.createElement('td') ).innerText= line.message;
@@ -19,7 +21,7 @@ function showLogLine( line, prepend= false ) {
   const dataDetails= row.appendChild( document.createElement('details') );
   dataDetails.appendChild( document.createElement('summary') ).innerText= 'Data';
   dataDetails.appendChild( document.createElement('p') )
-    .appendChild( document.createElement('code') ).innerText= JSON.stringify(line.data);
+    .appendChild( document.createElement('code') ).innerText= JSON.stringify(line.data, null, 2);
 }
 
 const leadingIcon= L.divIcon({className: 'leading-marker-icon'});

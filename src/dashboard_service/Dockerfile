@@ -9,6 +9,7 @@ WORKDIR /app
 COPY ./src/dashboard_service/package*.json .
 RUN npm install
 COPY ./src/dashboard_service .
+COPY ./assets/logo.png ./public
 
 EXPOSE 80
 
