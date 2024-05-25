@@ -32,7 +32,7 @@ class Vehicle {
   }
 
   fillWithRandomData() {
-    this.vin = Date.now().toString().padStart(17, 'a');
+    this.vin = Math.floor(Math.random() * 10e12).toString().padStart(17, 'a');
     this.name = pickRandom(NAMES) + ' ' + pickRandom(ADJECTIVES) + ' ' + pickRandom(NOUNS);
     this.oem = 'Audi';
     this.model_type = 'SQ8 e-tron';
@@ -173,6 +173,12 @@ export class LeadingVehicle extends Vehicle {
 
   // Receive control message from control service
   followMeUpdate(content) {
+    if( !content.follow_me || content.ended ) {
+      console.log('Detached leading vehicle');
+      this.followerVin= null;
+      return;
+    }
+
     //console.log('Lead Control Update: ', content);
     this.followerVin = content.follow_me.VIN;
   }
@@ -197,9 +203,20 @@ export class FollowingVehicle extends Vehicle {
   followMeUpdate(content) {
     //console.log('Follow Control Update: ', content);
     if (!this.manualMode) { // Not in manual mode: Follow the leading vehicle
-      this.leadingVin = content.follow_me.VIN;
-      this.speed = content.follow_me.speed;
-      this.lane = content.follow_me.lane;
+
+      if( !content.follow_me || content.ended ) {
+        console.log('Detached following vehicle');
+        this.leadingVin= null;
+        return;
+      }
+
+      const {VIN, speed, lane }= content.follow_me;
+      this.leadingVin = VIN;
+
+      if( speed !== null && lane !== null ) {
+        this.speed = speed;
+        this.lane = lane;
+      }
     }
   }
 }

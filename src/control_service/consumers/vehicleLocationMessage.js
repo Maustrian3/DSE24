@@ -1,4 +1,5 @@
 import { PromiseMemcached } from "../promiseMemcached.js";
+import { sendCommand } from "../publish.js";
 
 export function vehicleLocationMessage( channel, memcached ) {
  
@@ -59,7 +60,7 @@ export function vehicleLocationMessage( channel, memcached ) {
         }
       }
 
-      console.log( 'Updated entry', entry );
+      // console.log( 'Updated entry', entry );
 
       isPaired= true;
       return entry;

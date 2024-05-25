@@ -15,3 +15,10 @@ export function sendLogMessage( channel, config ) {
     Buffer.from( JSON.stringify( config ) )
   );
 }
+
+export function sendAvailableVehicles( channel, available, unavailable ) {
+  channel.sendToQueue(
+    process.env.CHANNEL_VEHICLE_AVAILABILITY,
+    Buffer.from(JSON.stringify({ available, unavailable }))
+  );
+}

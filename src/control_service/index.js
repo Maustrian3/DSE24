@@ -9,6 +9,7 @@ import { root } from './routes/root.js';
 // Consumers
 import { closeVehiclesMessage } from './consumers/closeVehiclesMessage.js';
 import { vehicleLocationMessage } from './consumers/vehicleLocationMessage.js';
+import { probingMessage } from './consumers/probingMessage.js';
 
 
 dotenv.config();
@@ -25,6 +26,13 @@ const channel= await openWithQueue( process.env.CHANNEL_CLOSE_VEHICLES );
 channel.consume(
   process.env.CHANNEL_CLOSE_VEHICLES,
   closeVehiclesMessage(channel, memcached),
+  {noAck: true}
+);
+
+await openWithQueue( process.env.CHANNEL_PAIRING_PROBING );
+channel.consume(
+  process.env.CHANNEL_PAIRING_PROBING,
+  probingMessage(channel, memcached),
   {noAck: true}
 );
 

@@ -1,5 +1,5 @@
 import { PromiseMemcached } from '../promiseMemcached.js';
-import { sendCommand, sendLogMessage } from '../publish.js';
+import { sendAvailableVehicles, sendCommand, sendLogMessage } from '../publish.js';
 import { reserveFollowingVehicle, reserveLeadingVehicle } from '../query.js';
 import { inventoryGetVehicleChannelId } from '../rest.js';
 import { waitFor } from '../util.js';
@@ -95,12 +95,7 @@ export function closeVehiclesMessage( channel, memcached ) {
     });
     
     // Send not-available message to beachcomb
-    channel.sendToQueue(
-      process.env.CHANNEL_VEHICLE_AVAILABILITY,
-      Buffer.from(JSON.stringify({
-        unavailable: [followingVIN, leadingVIN]
-      }))
-    );
+    sendAvailableVehicles(channel, [], [followingVIN, leadingVIN]);
 
     // Send Message to Eventlog: "FollowMe Modus gestartet"
     sendLogMessage( channel, {
@@ -120,8 +115,9 @@ export function closeVehiclesMessage( channel, memcached ) {
     channel.sendToQueue(
       process.env.CHANNEL_PAIRING_PROBING,
       Buffer.from(JSON.stringify({
-        time,
-        leadingVIN
+        startTime: time,
+        leadingVIN,
+        isStrict: false
       }))
     );
   }
