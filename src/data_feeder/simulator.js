@@ -9,17 +9,27 @@ export class Simulator {
   }
 
   createVehicles() {
-    let long = 90.0;
-    let lat = 0.0;
-    const distanceBetweenVehicles = 0.3 //  in km
+    
+    let long = 44.55984;
+    let lat = -98.98901;
+    const distanceBetweenVehicles = 0.3; //  in km
     const heading = 90; // 90 degrees = east
 
     this.leadingVehicle = new LeadingVehicle(long, lat, heading, 40);
 
-    let nextCoord = turf.destination(turf.point([long, lat]), distanceBetweenVehicles, -heading, {units: 'kilometers'});
+    let nextCoord = turf.destination(
+      turf.point([long, lat]),
+      distanceBetweenVehicles,
+      -heading,
+      { units: "kilometers" }
+    );
 
     this.followingVehicle = new FollowingVehicle(
-      nextCoord.geometry.coordinates[0], nextCoord.geometry.coordinates[1], heading, 55);
+      nextCoord.geometry.coordinates[0],
+      nextCoord.geometry.coordinates[1],
+      heading,
+      55
+    );
   }
 
   async startVehicles() {
@@ -41,7 +51,21 @@ export class Simulator {
     await sleep(5000);
     this.leadingVehicle.lane = this.leadingVehicle.lane === 1 ? 2 : 1;
     await sleep(5000);
-    this.followingVehicle.manualMode = true;
+    
+    // Test that following vehicle suddenly no longer obeys the command
+    // this.followingVehicle.manualMode = true;
+    
+    // Test vehicle no longer sends location updates to backend
+    // this.followingVehicle.stopUpdaterTimer();
+    
+    // Test following vehicle suddenly stops followMe itself
+    // this.followingVehicle.stopFollowMe();
+    // this.followingVehicle.manualMode = true;
+    
+    // Test leading vehicle suddenly stops followMe itself
+    //this.leadingVehicle.stopFollowMe();
+    //this.leadingVehicle.manualMode = true;
+
     this.leadingVehicle.speed = this.leadingVehicle.speed += 20;
   }
 

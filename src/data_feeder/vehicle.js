@@ -154,6 +154,10 @@ export class LeadingVehicle extends Vehicle {
     this.followerVin = null;
   }
 
+  stopFollowMe() {
+    this.followerVin= null;
+  }
+
   vehicleKind() {
     return 'leading';
   }
@@ -179,8 +183,9 @@ export class LeadingVehicle extends Vehicle {
       return;
     }
 
-    //console.log('Lead Control Update: ', content);
-    this.followerVin = content.follow_me.VIN;
+    if( !this.manualMode ) {
+      this.followerVin = content.follow_me.VIN;
+    }
   }
 }
 
@@ -189,6 +194,10 @@ export class FollowingVehicle extends Vehicle {
     super(long, lat, heading, speed);
 
     this.leadingVin = null;
+  }
+
+  stopFollowMe() {
+    this.leadingVin= null;
   }
 
   vehicleKind() {
