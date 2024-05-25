@@ -24,13 +24,15 @@ await openWithDirectExchange( process.env.CHANNEL_CONTROL_MESSAGES );
 const channel= await openWithQueue( process.env.CHANNEL_CLOSE_VEHICLES );
 channel.consume(
   process.env.CHANNEL_CLOSE_VEHICLES,
-  closeVehiclesMessage(channel, memcached)
+  closeVehiclesMessage(channel, memcached),
+  {noAck: true}
 );
 
 const vehicleQueue= await openWithBroadcastListener( process.env.CHANNEL_VEHICLE_LOCATIONS );
 channel.consume(
   vehicleQueue.queue,
-  vehicleLocationMessage(channel, memcached)
+  vehicleLocationMessage(channel, memcached),
+  {noAck: true}
 );
 
 // Run REST API

@@ -86,13 +86,13 @@ class Vehicle {
       this.channelId + "_queue",
       (msg) => {
         if (msg !== null) {
-          this.controlChannel.ack(msg);
           const content = JSON.parse(msg.content.toString());
           this.followMeUpdate(content);
         } else {
-          console.log('Consumer cancelled by server');
+          console.log("Consumer cancelled by server");
         }
-      }
+      },
+      { noAck: true }
       //vehicleControlUpdateConsumer();
     );
   }

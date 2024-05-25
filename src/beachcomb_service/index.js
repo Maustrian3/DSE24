@@ -26,13 +26,15 @@ await openWithQueue( process.env.CHANNEL_CLOSE_VEHICLES );
 const channel= await openWithQueue( process.env.CHANNEL_VEHICLE_UPDATES );
 channel.consume(
   process.env.CHANNEL_VEHICLE_UPDATES,
-  vehicleUpdates( channel )
+  vehicleUpdates( channel ),
+  {noAck: true}
 );
 
 await openWithQueue( process.env.CHANNEL_VEHICLE_AVAILABILITY );
 channel.consume(
   process.env.CHANNEL_VEHICLE_AVAILABILITY,
-  vehicleAvailability
+  vehicleAvailability,
+  {noAck: true}
 )
 
 

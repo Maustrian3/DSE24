@@ -4,7 +4,6 @@ export function vehicleLocationMessage( channel, memcached ) {
  
   return async function vehicleLocationMessageConsumer( msg ) {
     // Unwrap the RabbitMQ packet
-    channel.ack(msg);
     const content= JSON.parse( msg.content.toString() );
     
     const { time, vin, speed, lane, follow_me, kind }= content;

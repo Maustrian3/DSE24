@@ -11,7 +11,6 @@ import { waitFor } from '../util.js';
 export function closeVehiclesMessage( channel, memcached ) {
 
   return async function closeVehiclesMessageConsumer( msg ) {
-    channel.ack(msg);
     const content= JSON.parse( msg.content.toString() );
     
     const { VIN_follower: followingVIN, VIN_leading: leadingVIN }= content;

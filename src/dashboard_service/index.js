@@ -29,13 +29,15 @@ const channel = await ensureChannel();
 const logQueue= await openWithBroadcastListener( process.env.CHANNEL_LOGS );
 channel.consume(
   logQueue.queue,
-  logMessage( sseLogChannel )
+  logMessage( sseLogChannel ),
+  {noAck: true}
 );
 
 const vehicleQueue= await openWithBroadcastListener( process.env.CHANNEL_VEHICLE_LOCATIONS );
 channel.consume(
   vehicleQueue.queue,
-  vehicleLocationMessage( sseVehicleChannel )
+  vehicleLocationMessage( sseVehicleChannel ),
+  {noAck: true}
 );
 
 // Run REST API
