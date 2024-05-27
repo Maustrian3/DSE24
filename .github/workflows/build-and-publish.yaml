@@ -42,13 +42,13 @@ jobs:
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/inventory:${{ github.sha }}
 
-      # - name: Build and push Control Service
-      #   uses: docker/build-push-action@v4
-      #   with:
-      #     context: .
-      #     file: ./src/control_service/Dockerfile
-      #     push: true
-      #     tags: ${{ secrets.DOCKER_USERNAME }}/control:${{ github.sha }}
+      - name: Build and push Control Service
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./src/control_service/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/control:${{ github.sha }}
 
       - name: Build and push Dashboard Service
         uses: docker/build-push-action@v4
