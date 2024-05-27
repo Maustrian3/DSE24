@@ -23,13 +23,13 @@ spec:
             name: beachcomb
             port:
               number: 80
-      # - path: /control
-      #   pathType: Prefix
-      #   backend:
-      #     service:
-      #       name: control
-      #       port:
-      #         number: 80
+      - path: /control
+        pathType: Prefix
+        backend:
+          service:
+            name: control
+            port:
+              number: 80
       - path: /dashboard
         pathType: Prefix
         backend:
