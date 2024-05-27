@@ -13,7 +13,7 @@ spec:
         app: control
     spec:
       initContainers:
-      - name: check-rabbitmq-ready
+      - name: check-memcached-and-rabbitmq-ready
         image: busybox
         env:
         - name: MQ_USER
@@ -28,9 +28,14 @@ spec:
               key: MQ_PASSWORD
         command: [
           'sh', '-c',
-          'until wget "http://$MQ_USER:$MQ_PASSWORD@rabbitmq.development.svc.cluster.local:15672/api/aliveness-test/%2F"; do
-           echo waiting for RabbitMQ;
-           sleep 2; done; '
+          'until echo "version" | nc -vn -w 1 memcached.development.svc.cluster.local 11211; do
+            echo waiting for Memcached;
+            sleep 2;
+          done;
+          until wget "http://$MQ_USER:$MQ_PASSWORD@rabbitmq.development.svc.cluster.local:15672/api/aliveness-test/%2F"; do
+            echo waiting for RabbitMQ;
+            sleep 2;
+          done; '
         ]
       containers:
       - name: control
