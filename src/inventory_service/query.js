@@ -28,10 +28,3 @@ export async function getVehicleKind( conn, vin )  {
 
   return results;
 }
-
-// Ensure the functions are available for CommonJS (Node.js) environments
-// try {
-//   module.exports = {getVehicleKind}
-// } catch(error) {
-//   console.log("There was an error exporting modules for testing.")
-// }
