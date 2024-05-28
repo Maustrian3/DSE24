@@ -3,14 +3,6 @@ import {getVehicleChannelId, getVehicleKind, insertNewVehicle} from '../query.js
 import {getConnection, initDb, releaseConnection} from '../../common/db.js';
 import dotenv from "dotenv";
 
-
-// TODO:
-// Create database connection before each test
-// Close database connection after each test
-// Create dummy data and insert it into database
-// Test all functions in query.js
-
-
 describe('database queries', function (){
 
   let conn = null;
