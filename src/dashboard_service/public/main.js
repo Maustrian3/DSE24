@@ -18,9 +18,13 @@ function showLogLine( line, prepend= false ) {
   row.appendChild( document.createElement('td') ).innerText= line.severity;
   row.appendChild( document.createElement('td') ).innerText= line.message;
 
-  const dataDetails= row.appendChild( document.createElement('details') );
-  dataDetails.appendChild( document.createElement('summary') ).innerText= 'Data';
-  dataDetails.appendChild( document.createElement('p') )
+  const dataDetails= row
+    .appendChild( document.createElement('td') )
+    .appendChild( document.createElement('details') );
+  dataDetails
+    .appendChild( document.createElement('summary') ).innerText= 'Data';
+  dataDetails
+    .appendChild( document.createElement('p') )
     .appendChild( document.createElement('code') ).innerText= JSON.stringify(line.data, null, 2);
 }
 

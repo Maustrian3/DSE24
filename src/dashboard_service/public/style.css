@@ -46,6 +46,7 @@ header {
   overflow-y: scroll;
   
   table {
+    width: 100%;
     border-collapse: collapse;
   }
 
