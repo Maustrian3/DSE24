@@ -1,19 +1,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: data_feeder
+  name: data-feeder
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: data_feeder
+      app: data-feeder
   template:
     metadata:
       labels:
-        app: data_feeder
+        app: data-feeder
     spec:
       containers:
-      - name: data_feeder
+      - name: data-feeder
         image: studenten/data_feeder:$LATEST_COMMIT_HASH
         imagePullPolicy: Always
         ports: []

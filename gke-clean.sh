@@ -1,6 +1,6 @@
 
-kubectl delete deployment data_feeder
-kubectl delete service data_feeder
+kubectl delete deployment data-feeder
+kubectl delete service data-feeder
 
 kubectl delete deployment beachcomb
 kubectl delete service beachcomb

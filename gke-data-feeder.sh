@@ -5,11 +5,11 @@ function envsubst_kubectl() {
 
 
 echo "### Shutting down data feeder ###"
-kubectl delete deployment data_feeder
-kubectl delete service data_feeder
+kubectl delete deployment data-feeder
+kubectl delete service data-feeder
 
 ## Wait for control service to be available
-export CONTROL_SERVICE_URL = $(kubectl get cm dse24-config -o json | jq -r '.data.CONTROL_CHECK_URL')
+export CONTROL_SERVICE_URL=$(kubectl get cm dse24-config -o json | jq -r '.data.CONTROL_CHECK_URL')
 until wget -O/dev/null "$CONTROL_SERVICE_URL"; do
   echo "Waiting for control service..."
   sleep 2
