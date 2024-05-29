@@ -10,7 +10,7 @@ kubectl delete service data-feeder
 
 ## Wait for control service to be available
 export CONTROL_SERVICE_URL=$(kubectl get cm dse24-config -o json | jq -r '.data.CONTROL_CHECK_URL')
-until wget -O/dev/null "$CONTROL_SERVICE_URL"; do
+until wget -O/dev/null -q "$CONTROL_SERVICE_URL"; do
   echo "Waiting for control service..."
   sleep 2
 done
