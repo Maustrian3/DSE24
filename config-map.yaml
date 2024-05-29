@@ -17,3 +17,7 @@ data:
   BEACHCOMB_HOST: beachcomb.development.svc.cluster.local
   CONTROL_HOST: control.development.svc.cluster.local
   DASHBOARD_HOST: dashboard.development.svc.cluster.local
+
+  # Additional environment vars for the data feeder
+  REGISTER_URL: http://34.49.40.104/inventory/
+  CONTROL_CHECK_URL: http://34.49.40.104/control/

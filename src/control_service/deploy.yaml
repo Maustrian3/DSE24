@@ -44,6 +44,11 @@ spec:
         ports:
         - containerPort: 80
         env:
+        - name: MQ_USER
+          valueFrom:
+            secretKeyRef:
+              name: dse24-secret
+              key: MQ_USER
         - name: MQ_PASSWORD
           valueFrom:
             secretKeyRef:

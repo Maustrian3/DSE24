@@ -57,3 +57,11 @@ jobs:
           file: ./src/dashboard_service/Dockerfile
           push: true
           tags: ${{ secrets.DOCKER_USERNAME }}/dashboard:${{ github.sha }}
+
+      - name: Build and push Datafeeder Service
+        uses: docker/build-push-action@v4
+        with:
+          context: .
+          file: ./src/data_feeder/Dockerfile
+          push: true
+          tags: ${{ secrets.DOCKER_USERNAME }}/data_feeder:${{ github.sha }}
