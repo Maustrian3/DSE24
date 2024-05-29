@@ -91,7 +91,6 @@ class Vehicle {
         }
 
         const content = JSON.parse( msg.content.toString() );
-        console.log('Control message received', content);
 
         this.followMeUpdate(content);
       },
@@ -211,7 +210,6 @@ export class FollowingVehicle extends Vehicle {
 
   // Receive control message from control service
   followMeUpdate(content) {
-    //console.log('Follow Control Update: ', content);
     if (!this.manualMode) { // Not in manual mode: Follow the leading vehicle
 
       if( !content.follow_me || content.ended ) {
