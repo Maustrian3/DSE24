@@ -17,7 +17,7 @@ spec:
         image: memcached:1.6.27-alpine
         imagePullPolicy: Always
         ports:
-        - containerPort: 11212
+        - containerPort: 11211
         readinessProbe:
           exec:
             command: ['sh', '-c', 'echo "version" | nc -vn -w 1 127.0.0.1 11211']
@@ -26,7 +26,7 @@ spec:
           timeoutSeconds: 5
         livenessProbe:
           tcpSocket:
-            port: 11212
+            port: 11211
           initialDelaySeconds: 15
           periodSeconds: 20
           timeoutSeconds: 5
