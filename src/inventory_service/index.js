@@ -14,7 +14,9 @@ import { getKind } from './routes/getKind.js';
 // Load .env file
 dotenv.config();
 
-await initDb();
+async function initDbWrapper() {
+  await initDb();
+}
 
 // Run REST API
 const app= express();
@@ -33,3 +35,5 @@ app.use(`/${process.env.SERVICE_PREFIX}`, router);
 app.listen( parseInt(process.env.REST_PORT), () => {
   console.log(`Inventory service listening on port ${process.env.REST_PORT}`);
 });
+
+export default app;

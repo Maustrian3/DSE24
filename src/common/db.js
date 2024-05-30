@@ -38,3 +38,5 @@ export function releaseConnection( conn ) {
   assertDbInit();
   pool.releaseConnection( conn );
 }
+
+// export default { getConnection, releaseConnection };
