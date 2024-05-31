@@ -1,6 +1,5 @@
 import app from '../index.js';
-
-// TODO import request from supertest correctly!
+import request from 'supertest';
 
 jest.mock('../../common/db.js', () => ({
     __esModule: true, // this property makes it work
@@ -17,7 +16,6 @@ jest.mock('../query.js', () => ({
 
 import { getConnection, releaseConnection } from '../../common/db';
 import { getVehicleKind } from '../query.js';
-import {request} from "express";
 
 describe('GET /vehicles/:vin/kind', () => {
     beforeEach(() => {
