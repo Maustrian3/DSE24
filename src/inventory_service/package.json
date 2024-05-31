@@ -5,7 +5,7 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "test": "mocha"
+    "test": "jest"
   },
   "author": "ShadowDrive Systems (R)",
   "license": "MIT",
@@ -15,9 +15,18 @@
     "joi": "^17.13.1"
   },
   "devDependencies": {
-    "mocha": "^10.4.0"
+    "@babel/core": "^7.24.6",
+    "@babel/plugin-syntax-top-level-await": "^7.14.5",
+    "@babel/plugin-transform-runtime": "^7.24.6",
+    "@babel/preset-env": "^7.24.6",
+    "@babel/preset-react": "^7.24.6",
+    "babel-jest": "^29.7.0",
+    "jest": "^29.7.0",
+    "supertest": "^7.0.0"
   },
   "jest": {
-    "transform": {}
+    "transform": {
+      "^.+\\.jsx?$": "babel-jest"
+    }
   }
 }
