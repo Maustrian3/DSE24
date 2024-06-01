@@ -9,3 +9,17 @@ Run the data feeder with the `--config` option.
 ```bash
 node . --config cloud.env
 ```
+
+You can also list and select one of a few predefined scenarios. If no scenario
+is specified, the default one from the task description is selected, where the
+following vehicle disobeys commands after some time in follow-me mode.
+
+List available scenarios
+```bash
+node . --list
+```
+
+Select scenario with index `2`.
+```bash
+node . --scenario 2
+```

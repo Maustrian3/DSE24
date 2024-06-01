@@ -3,24 +3,26 @@ import {FollowingVehicle, LeadingVehicle} from "./vehicle.js";
 import * as turf from '@turf/turf';
 
 export class Simulator {
-  constructor() {
+  constructor( scenario ) {
     this.leadingVehicle = null;
     this.followingVehicle = null;
+    this.scenario= scenario;
   }
 
   createVehicles() {
     
-    let long = 44.55984;
-    let lat = -98.98901;
+    let long = -98.98901;
+    let lat = 44.55984;
     const distanceBetweenVehicles = 0.3; //  in km
-    const heading = 90; // 90 degrees = east
+    const heading = 0; // 0 degrees = north
 
     this.leadingVehicle = new LeadingVehicle(long, lat, heading, 40);
 
+    // Place the following vehicle behind the leading one
     let nextCoord = turf.destination(
       turf.point([long, lat]),
       distanceBetweenVehicles,
-      -heading,
+      heading - 180,
       { units: "kilometers" }
     );
 
@@ -42,31 +44,24 @@ export class Simulator {
   }
 
   async startLVManeuvers() {
+    // Standard follow me pairing setup: Let the following vehicle catch up
+    // to the leading one and wait until pairing complete
     while (!this.followingVehicle.followMeStatus()) {
       await sleep(1000);
     }
-    this.leadingVehicle.lane = this.leadingVehicle.lane === 1 ? 2 : 1;
-    await sleep(5000);
-    this.leadingVehicle.speed = this.leadingVehicle.speed += 20;
-    await sleep(5000);
-    this.leadingVehicle.lane = this.leadingVehicle.lane === 1 ? 2 : 1;
-    await sleep(5000);
-    
-    // Test that following vehicle suddenly no longer obeys the command
-    // this.followingVehicle.manualMode = true;
-    
-    // Test vehicle no longer sends location updates to backend
-    // this.followingVehicle.stopUpdaterTimer();
-    
-    // Test following vehicle suddenly stops followMe itself
-    // this.followingVehicle.stopFollowMe();
-    // this.followingVehicle.manualMode = true;
-    
-    // Test leading vehicle suddenly stops followMe itself
-    //this.leadingVehicle.stopFollowMe();
-    //this.leadingVehicle.manualMode = true;
 
+    // Perform the maneuvers
+    this.leadingVehicle.lane = this.leadingVehicle.lane === 1 ? 2 : 1;
+    await sleep(5000);
     this.leadingVehicle.speed = this.leadingVehicle.speed += 20;
+    await sleep(5000);
+    this.leadingVehicle.lane = this.leadingVehicle.lane === 1 ? 2 : 1;
+    await sleep(5000);
+    this.leadingVehicle.speed = this.leadingVehicle.speed += 20;
+    await sleep(5000);
+    
+    // Run the selected scenario
+    await this.scenario();
   }
 
   stopVehicles() {

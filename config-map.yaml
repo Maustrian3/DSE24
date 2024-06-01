@@ -12,7 +12,12 @@ data:
   MYSQL_PORT: '3306'
   MYSQL_DATABASE: dse24
   MQ_HOST_PORT: rabbitmq.development.svc.cluster.local:5672
+  MEMCACHED_HOST_PORT: memcached.development.svc.cluster.local:11211
   INVENTORY_HOST: inventory.development.svc.cluster.local
   BEACHCOMB_HOST: beachcomb.development.svc.cluster.local
   CONTROL_HOST: control.development.svc.cluster.local
   DASHBOARD_HOST: dashboard.development.svc.cluster.local
+
+  # Additional environment vars for the data feeder
+  REGISTER_URL: http://34.49.40.104/inventory/vehicles
+  CONTROL_CHECK_URL: http://34.49.40.104/control/

@@ -11,8 +11,8 @@ export async function map( req, res ) {
 
   // Mmmmurica
   res.send({
-    lat: -98.98901,
-    long: 44.55984,
+    long: -98.98901,
+    lat: 44.55984,
     zoom: 11,
   });
 }

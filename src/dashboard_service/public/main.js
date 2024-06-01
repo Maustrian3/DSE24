@@ -12,14 +12,20 @@ function showLogLine( line, prepend= false ) {
     rows.append( row );
   }
 
+  row.classList.add( line.severity );
+
   row.appendChild( document.createElement('td') ).innerText= formattedDate;
   row.appendChild( document.createElement('td') ).innerText= line.severity;
   row.appendChild( document.createElement('td') ).innerText= line.message;
 
-  const dataDetails= row.appendChild( document.createElement('details') );
-  dataDetails.appendChild( document.createElement('summary') ).innerText= 'Data';
-  dataDetails.appendChild( document.createElement('p') )
-    .appendChild( document.createElement('code') ).innerText= JSON.stringify(line.data);
+  const dataDetails= row
+    .appendChild( document.createElement('td') )
+    .appendChild( document.createElement('details') );
+  dataDetails
+    .appendChild( document.createElement('summary') ).innerText= 'Data';
+  dataDetails
+    .appendChild( document.createElement('p') )
+    .appendChild( document.createElement('code') ).innerText= JSON.stringify(line.data, null, 2);
 }
 
 const leadingIcon= L.divIcon({className: 'leading-marker-icon'});
@@ -30,12 +36,12 @@ function showVehicleMarker( map, vehicle ) {
   const {long, lat}= vehicle.location;
   const entry= knownVehicles.get( vehicle.vin );
   if( entry ) {
-    entry.setLatLng([long, lat]);
+    entry.setLatLng([lat, long]);
     return;
   }
 
   const icon= vehicle.kind === 'leading' ? leadingIcon : followingIcon;
-  const marker= L.marker([long, lat], {icon}).bindPopup(`VIN: ${vehicle.vin}<br>Kind: ${vehicle.kind}`).addTo( map );
+  const marker= L.marker([lat, long], {icon}).bindPopup(`VIN: ${vehicle.vin}<br>Kind: ${vehicle.kind}`).addTo( map );
   knownVehicles.set( vehicle.vin, marker );
 }
 
@@ -43,7 +49,7 @@ async function loadMap() {
   const resp= await fetch('./map');
   const {long, lat, zoom}= await resp.json();
 
-  const map = L.map('leaflet-map').setView([long, lat], zoom);
+  const map = L.map('leaflet-map').setView([lat, long], zoom);
   L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
     maxZoom: 19,
     attribution:

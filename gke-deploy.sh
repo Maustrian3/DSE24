@@ -29,14 +29,17 @@ echo "#### Running services ####"
 envsubst_kubectl src/rabbitmq_service/deploy.yaml
 envsubst_kubectl src/rabbitmq_service/service.yaml
 
+envsubst_kubectl src/memcached_service/deploy.yaml
+envsubst_kubectl src/memcached_service/service.yaml
+
 envsubst_kubectl src/beachcomb_service/deploy.yaml
 envsubst_kubectl src/beachcomb_service/service.yaml
 
 envsubst_kubectl src/inventory_service/deploy.yaml
 envsubst_kubectl src/inventory_service/service.yaml
 
-# envsubst_kubectl src/control_service/deploy.yaml
-# envsubst_kubectl src/control_service/service.yaml
+envsubst_kubectl src/control_service/deploy.yaml
+envsubst_kubectl src/control_service/service.yaml
 
 envsubst_kubectl src/dashboard_service/deploy.yaml
 envsubst_kubectl src/dashboard_service/service.yaml

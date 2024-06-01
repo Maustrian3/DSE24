@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: data-feeder
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: data-feeder
+  template:
+    metadata:
+      labels:
+        app: data-feeder
+    spec:
+      containers:
+      - name: data-feeder
+        image: studenten/data_feeder:$LATEST_COMMIT_HASH
+        imagePullPolicy: Always
+        ports: []
+        env:
+        - name: MQ_USER
+          valueFrom:
+            secretKeyRef:
+              name: dse24-secret
+              key: MQ_USER
+        - name: MQ_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: dse24-secret
+              key: MQ_PASSWORD
+        envFrom:
+        - configMapRef:
+            name: dse24-config

@@ -92,7 +92,7 @@ async function updateVehicle(conn, vin, isAvailable, long, lat, results) {
     return;
   }
   
-  console.log(`Updated vehicle '${vin}' at ${long}, ${lat}`);
+  console.log(`Updated vehicle '${vin}' at ${lat}, ${long}`);
 
   if( doDistanceCheck ) {
     await findCloseAvailableLeadingVehicles( conn, vin );

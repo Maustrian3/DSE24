@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: memcached
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: memcached
+  template:
+    metadata:
+      labels:
+        app: memcached
+    spec:
+      containers:
+      - name: memcached
+        image: memcached:1.6.27-alpine
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 11211
+        readinessProbe:
+          exec:
+            command: ['sh', '-c', 'echo "version" | nc -vn -w 1 127.0.0.1 11211']
+          initialDelaySeconds: 15
+          periodSeconds: 20
+          timeoutSeconds: 5
+        livenessProbe:
+          tcpSocket:
+            port: 11211
+          initialDelaySeconds: 15
+          periodSeconds: 20
+          timeoutSeconds: 5

@@ -4,6 +4,63 @@
   <img width="400" src="./assets/logo.png">
 </p>
 
+## GKE Scripts
+
+The typical processes of starting, stopping, deploying and cleaning-up of services is handled
+with a bunch of automated scripts.
+
+#### Starting
+
+First start the cluster and database, then deploy the services.
+
+```bash
+sh ./gke-start.sh
+sh ./gke-deploy.sh
+```
+
+The deploy script pulls the current version from the main branch, and deploys the according images
+from docker hub. You can disable GitHub pulling with the option `-nogit`. Docker images are tagged
+with the current commit hash by the CI pipeline, to circumvent the GKE image cache, so pulling before
+is important and hence automated.
+
+```bash
+sh ./gke-deploy.sh -nogit
+```
+
+#### Datafeeder testing
+
+After starting and deploying you can also run the data feeders from within the GKE cluster by running
+the following script:
+
+```bash
+sh ./gke-data-feeder.sh
+```
+
+The script automatically removes any active instances of the data feeder on startup and waits for the
+services to be ready/healthy. Therefore, you can run it immediately after deploying the services, and
+you can re-run it to start the pre-programmed scenario again and again without having to delete the
+services manually.
+
+Running a different scenario than the default one set in the image (scenario 'followingVehicleDisobeys') you need to run the data feeder service locally. See the data feeder ReadMe for this.
+
+#### Stopping
+
+If you want to re-deploy the services you need to clean the currently running ones first, and then deploy the new ones. Be aware, that the services actually have to shutdown before re-deploying, so
+before running the second command make sure that everything is off.
+
+```bash
+sh ./gke-clean.sh
+sh ./gke-deploy.sh
+```
+
+When you want to shutdown everything including the whole cluster runt the following:
+
+```bash
+sh ./gke-stop.sh
+```
+
+This command also calls the `gke-clean` script internally so you do not need to clean manually beforehand. Also make sure that all things shutdown properly to avoid unnecessary GKE costs.
+
 ## Sequence charts
 
 ### Establish/Break link

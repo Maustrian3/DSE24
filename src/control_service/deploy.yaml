@@ -1,0 +1,65 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: control
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: control
+  template:
+    metadata:
+      labels:
+        app: control
+    spec:
+      initContainers:
+      - name: check-memcached-and-rabbitmq-ready
+        image: busybox
+        env:
+        - name: MQ_USER
+          valueFrom:
+            secretKeyRef:
+              name: dse24-secret
+              key: MQ_USER
+        - name: MQ_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: dse24-secret
+              key: MQ_PASSWORD
+        command: [
+          'sh', '-c',
+          'until echo "version" | nc -vn -w 1 memcached.development.svc.cluster.local 11211; do
+            echo waiting for Memcached;
+            sleep 2;
+          done;
+          until wget "http://$MQ_USER:$MQ_PASSWORD@rabbitmq.development.svc.cluster.local:15672/api/aliveness-test/%2F"; do
+            echo waiting for RabbitMQ;
+            sleep 2;
+          done; '
+        ]
+      containers:
+      - name: control
+        image: studenten/control:$LATEST_COMMIT_HASH
+        imagePullPolicy: Always
+        ports:
+        - containerPort: 80
+        env:
+        - name: MQ_USER
+          valueFrom:
+            secretKeyRef:
+              name: dse24-secret
+              key: MQ_USER
+        - name: MQ_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: dse24-secret
+              key: MQ_PASSWORD
+        envFrom:
+        - configMapRef:
+            name: dse24-config
+        readinessProbe:
+          failureThreshold: 3
+          httpGet:
+            path: /
+            port: 80
+            scheme: HTTP
