@@ -15,6 +15,3 @@ COPY ./src/inventory_service .
 EXPOSE 80
 
 CMD ["node", "index.js"]
-
-# Run the tests
-CMD ["npm", "test"]

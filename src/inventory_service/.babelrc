@@ -1,11 +1,16 @@
 {
   "presets": [
     [
-      "@babel/preset-env"
+      "@babel/preset-env",
+      {
+        "targets": {
+          "node": "current",
+          "esmodules": true
+        }
+      }
     ]
   ],
   "plugins": [
-    "@babel/plugin-transform-runtime",
-    "@babel/plugin-syntax-top-level-await"
+    "@babel/plugin-transform-runtime"
   ]
 }
