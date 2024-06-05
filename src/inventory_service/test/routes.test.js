@@ -1,4 +1,4 @@
-import {app, closeServer, createApp} from '../index.js';
+import {app, closeServer} from '../index.js';
 import request from 'supertest';
 
 jest.mock('../../common/db.js', () => ({
@@ -26,25 +26,17 @@ import {randomUUID} from 'node:crypto';
 
 describe('Routes tests', () => {
 
-  beforeAll(async () => {
-    //initDb.mockResolvedValue({});
-
-    //await createApp();
-    // await startServer();
-  });
-
   beforeEach(async () => {
     jest.clearAllMocks();
 
     // Mock: Resolve database connection to empty objects
-    //initDb.mockResolvedValue({});
     getConnection.mockResolvedValue({});
     releaseConnection.mockResolvedValue({});
   });
 
   afterAll(async () => {
     jest.clearAllMocks();
-    //await closeServer();
+    await closeServer();
   });
 
   describe('GET /vehicles/:vin/kind', () => {
