@@ -28,3 +28,5 @@ export async function getVehicleKind( conn, vin )  {
 
   return results;
 }
+
+// export default { getVehicleKind };

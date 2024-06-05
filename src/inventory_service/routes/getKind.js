@@ -1,5 +1,5 @@
 import { getConnection, releaseConnection } from '../../common/db.js';
-import { getVehicleKind } from '../query.js';
+import {getVehicleKind, insertNewVehicle} from '../query.js';
 
 export async function getKind( req, res ) {
   const { vin }= req.params;
