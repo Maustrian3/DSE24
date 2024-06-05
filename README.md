@@ -233,6 +233,19 @@ The JSON response:
 }
 ```
 
+#### GET `/vehicles/<vin>/kind`
+Gets the kind of a vehicle by its id.
+
+The JSON response:
+```json
+{
+  "kind": "leading"
+}
+```
+
+- The `kind` field is either `leading` or `following`.
+
+
 ### Beachcomb Service
 #### GET `/vehicles/positions`
 Gets the current positions of all vehicles.
@@ -273,7 +286,15 @@ Gets a server sent event (SSE) stream for incoming new log messages.
 The JSON body of a log message event is the same as the entries of the GET endpoint.
 
 #### GET `/map`
-Gets the map. (TODO: Depends on the concrete implementation of the map.)
+Gets the default map view parameters.
+
+```json
+{
+  "long": -98.98901,
+  "lat": 44.55984,
+  "zoom": 11
+}
+```
 
 #### GET `/vehicles`
 Gets the current positions of all active vehicles.
