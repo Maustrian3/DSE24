@@ -297,6 +297,7 @@ stateDiagram-v2
     Control --> Beachcomb: Available vehicles
     Control --> Dashboard: Log message
     Control --> Vehicle: Control message
+    Control --> Control: Pairing probing
 ```
 
 ### Vehicle status updates
@@ -396,6 +397,21 @@ these messages.
 
 The JSON message body has the same shape as the data returned from the REST [GET endpoint](#get-vehiclespositions) of the
 beachcomb service.
+
+
+### Pairing probing
+The control service sends this message with a delay when the followMe pairing is established to itself. When it is received the pairing checks are performed, and on success another probing message is sent after some delay. This way different control service instances can perform the pairing checks which prevents one pairing being bound to a single control service instance.
+
+The JSON body of every pairing probing message:
+```json
+{
+  "startTime": "ISO time string",
+  "leadingVIN": "...",
+  "isStrict": false
+}
+```
+
+- The `isStrict` field indicates whether the next probing check should be performed strictly.
 
 
 ### Log messages
