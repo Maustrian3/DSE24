@@ -1,0 +1,312 @@
+openapi: 3.0.3
+info:
+  title: DSE - API Gateway Documentation
+  version: 1.0.0
+tags:
+  - name: Inventory Service
+  - name: Beachcomb Service
+  - name: Dashboard
+paths:
+  /vehicles:
+    get:
+      summary: Gets the current positions of all active vehicles.
+      operationId: getActiveVehiclePositions
+      tags:
+        - Dashboard
+      responses:
+        '200':
+          description: Successfully retrieved vehicle positions.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/VehiclePosition'
+    post:
+      summary: Creates a new vehicle in the database.
+      operationId: createVehicle
+      tags:
+        - Inventory Service
+      requestBody:
+        description: A JSON object containing vehicle details.
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewVehicle'
+      responses:
+        '200':
+          description: Successfully created a new vehicle.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChannelIdResponse'
+        '422':
+          description: Invalid vehicle object or Duplicate VIN.
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Invalid vehicle object: [error details]"
+        '500':
+          description: Could not create vehicle due to a server error.
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Could not create vehicle"
+  /vehicles/{vin}/channel:
+    get:
+      summary: Gets the channel id for a vehicle by its VIN.
+      operationId: getChannelId
+      tags:
+        - Inventory Service
+      parameters:
+        - name: vin
+          in: path
+          required: true
+          schema:
+            type: string
+            format: uuid
+            minLength: 17
+            maxLength: 17
+          description: The Vehicle Identification Number.
+      responses:
+        '200':
+          description: Successfully retrieved the channel ID.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ChannelIdResponse'
+        '404':
+          description: Unknown VIN.
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Unknown VIN '1HGCM82633A004352'"
+  /vehicles/{vin}/kind:
+    get:
+      summary: Gets the kind of a vehicle by its VIN.
+      operationId: getVehicleKind
+      tags:
+        - Inventory Service
+      parameters:
+        - name: vin
+          in: path
+          required: true
+          schema:
+            type: string
+            minLength: 17
+            maxLength: 17
+          description: The Vehicle Identification Number.
+      responses:
+        '200':
+          description: Successfully retrieved the vehicle kind.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/VehicleKindResponse'
+        '404':
+          description: Unknown VIN.
+          content:
+            text/plain:
+              schema:
+                type: string
+                example: "Unknown VIN '1HGCM82633A004352'"
+  /vehicles/positions:
+    get:
+      summary: Gets the current positions of all vehicles.
+      operationId: getVehiclePositions
+      tags:
+        - Beachcomb Service
+      responses:
+        '200':
+          description: Successfully retrieved vehicle positions.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/VehiclePosition'
+  /:
+    get:
+      summary: Returns web resources needed for the dashboard frontend.
+      operationId: getDashboardResources
+      tags:
+        - Dashboard
+      responses:
+        '200':
+          description: Successfully retrieved dashboard resources.
+  /logs:
+    get:
+      summary: Gets the old log entries in the specified timespan.
+      operationId: getLogs
+      tags:
+        - Dashboard
+      parameters:
+        - name: from
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date-time
+          description: The start time for the log entries.
+        - name: to
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date-time
+          description: The end time for the log entries.
+      responses:
+        '200':
+          description: Successfully retrieved log entries.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/LogMessage'
+  /logs/live:
+    get:
+      summary: Gets a server-sent event (SSE) stream for incoming new log messages.
+      operationId: getLiveLogs
+      tags:
+        - Dashboard
+      responses:
+        '200':
+          description: Successfully set up live log streaming.
+  /map:
+    get:
+      summary: Gets the map.
+      operationId: getMap
+      tags:
+        - Dashboard
+      responses:
+        '200':
+          description: Successfully retrieved the map.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MapResponse'
+  /vehicles/live:
+    get:
+      summary: Gets a server-sent event (SSE) stream for incoming new vehicle positions.
+      operationId: getLiveVehiclePositions
+      tags:
+        - Dashboard
+      responses:
+        '200':
+          description: Successfully set up live vehicle position streaming.
+components:
+  schemas:
+    NewVehicle:
+      type: object
+      properties:
+        name:
+          type: string
+          description: The name of the vehicle.
+          example: "Torlos schnelles Auto"
+        VIN:
+          type: string
+          format: uuid
+          minLength: 17
+          maxLength: 17
+          description: The Vehicle Identification Number.
+        OEM:
+          type: string
+          description: The Original Equipment Manufacturer.
+          example: "Audi"
+        model_type:
+          type: string
+          description: The model type of the vehicle.
+          example: "SQ8 e-tron"
+        kind:
+          type: string
+          enum:
+            - leading
+            - following
+          description: Describes whether the vehicle is leading or following.
+      required:
+        - name
+        - VIN
+        - OEM
+        - model_type
+        - kind
+    ChannelIdResponse:
+      type: object
+      properties:
+        channel_id:
+          type: string
+          format: uuid
+          description: A 36 character UUID v4 string.
+    VehicleKindResponse:
+      type: object
+      properties:
+        kind:
+          type: string
+          enum:
+            - leading
+            - following
+          description: The kind of the vehicle.
+          example: "leading"
+    VehiclePosition:
+      type: object
+      properties:
+        VIN:
+          type: string
+          description: The Vehicle Identification Number.
+        location:
+          type: object
+          properties:
+            long:
+              type: number
+              format: float
+              description: Longitude of the vehicle's location.
+            lat:
+              type: number
+              format: float
+              description: Latitude of the vehicle's location.
+            heading:
+              type: number
+              format: float
+              description: Heading of the vehicle.
+        speed:
+          type: number
+          format: float
+          description: Speed of the vehicle.
+        lane:
+          type: integer
+          description: Lane number of the vehicle.
+    LogMessage:
+      type: object
+      properties:
+        timestamp:
+          type: string
+          format: date-time
+          description: The timestamp of the log message.
+        level:
+          type: string
+          description: The level of the log message (e.g., INFO, ERROR).
+          example: "INFO"
+        message:
+          type: string
+          description: The log message.
+    MapResponse:
+      type: object
+      properties:
+        long:
+          type: number
+          format: float
+          description: Longitude of the map center.
+          example: -98.98901
+        lat:
+          type: number
+          format: float
+          description: Latitude of the map center.
+          example: 44.55984
+        zoom:
+          type: integer
+          description: Zoom level of the map.
+          example: 11
