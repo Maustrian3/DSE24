@@ -96,6 +96,7 @@ sequenceDiagram
     Leading ->> Beachcomb: Message: current data
     Follower ->> Beachcomb: Message: current data
     Beachcomb ->> Control: Message: vehicle state 
+    Control ->> Control: Pairing probing
   end
   critical Break link
     Leading ->> Beachcomb: Message: current dat
